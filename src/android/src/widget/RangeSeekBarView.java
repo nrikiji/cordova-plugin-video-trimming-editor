@@ -63,7 +63,7 @@ public class RangeSeekBarView extends View {
   private boolean notifyWhileDragging = false;
   private OnRangeSeekBarChangeListener mRangeSeekBarChangeListener;
   //  private int whiteColorRes = getContext().getResources().getColor(R.color.white);
-  private int whiteColorRes = getContext().getResources().getColor(getResources().getIdentifier("white", "color", getPackageName()));
+  private int whiteColorRes = getContext().getResources().getColor(getResources().getIdentifier("white", "color", getContext().getPackageName()));
 
   public enum Thumb {
     MIN, MAX
@@ -93,7 +93,7 @@ public class RangeSeekBarView extends View {
   private void init() {
     mScaledTouchSlop = ViewConfiguration.get(getContext()).getScaledTouchSlop();
     // thumbImageLeft = BitmapFactory.decodeResource(getResources(), R.drawable.ic_video_thumb_handle);
-    thumbImageLeft = BitmapFactory.decodeResource(getResources(), getResources().getIdentifier("ic_video_thumb_handle", "drawable", getPackageName()));
+    thumbImageLeft = BitmapFactory.decodeResource(getResources(), getResources().getIdentifier("ic_video_thumb_handle", "drawable", getContext().getPackageName()));
 
     int width = thumbImageLeft.getWidth();
     int height = thumbImageLeft.getHeight();
@@ -109,7 +109,7 @@ public class RangeSeekBarView extends View {
     thumbWidth = newWidth;
     thumbHalfWidth = thumbWidth / 2;
     // int shadowColor = getContext().getResources().getColor(R.color.shadow_color);
-    int shadowColor = getContext().getResources().getColor(getResources().getIdentifier("shadow_color", "color", getPackageName()));
+    int shadowColor = getContext().getResources().getColor(getResources().getIdentifier("shadow_color", "color", getContext().getPackageName()));
     mShadow.setAntiAlias(true);
     mShadow.setColor(shadowColor);
 

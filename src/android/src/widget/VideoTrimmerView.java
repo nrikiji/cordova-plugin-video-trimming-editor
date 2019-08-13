@@ -87,15 +87,15 @@ public class VideoTrimmerView extends FrameLayout implements IVideoTrimmerView {
     this.mContext = context;
 
     // getResources(), getResources().getIdentifier("ic_video_thumb_handle", "drawable", getPackageName())
-    LayoutInflater.from(context).inflate(getResources(), getResources().getIdentifier("video_trimmer_view", "layout", getPackageName(), this, true));
+    LayoutInflater.from(context).inflate(getResources().getIdentifier("video_trimmer_view", "layout", context.getPackageName()), this, true);
 
-    mLinearVideo = findViewById(getResources(), getResources().getIdentifier("layout_surface_view", "id", getPackageName()));
-    mVideoView = findViewById(getResources(), getResources().getIdentifier("video_loader", "id", getPackageName()));
-    mPlayView = findViewById(getResources(), getResources().getIdentifier("icon_video_play", "id", getPackageName()));
-    mSeekBarLayout = findViewById(getResources(), getResources().getIdentifier("seekBarLayout", "id", getPackageName()));
-    mRedProgressIcon = findViewById(getResources(), getResources().getIdentifier("positionIcon", "id", getPackageName()));
-    mVideoShootTipTv = findViewById(getResources(), getResources().getIdentifier("video_shoot_tip", "id", getPackageName()));
-    mVideoThumbRecyclerView = findViewById(getResources(), getResources().getIdentifier("video_frames_recyclerView", "id", getPackageName()));
+    mLinearVideo = findViewById(getResources().getIdentifier("layout_surface_view", "id", context.getPackageName()));
+    mVideoView = findViewById(getResources().getIdentifier("video_loader", "id", context.getPackageName()));
+    mPlayView = findViewById(getResources().getIdentifier("icon_video_play", "id", context.getPackageName()));
+    mSeekBarLayout = findViewById(getResources().getIdentifier("seekBarLayout", "id", context.getPackageName()));
+    mRedProgressIcon = findViewById(getResources().getIdentifier("positionIcon", "id", context.getPackageName()));
+    mVideoShootTipTv = findViewById(getResources().getIdentifier("video_shoot_tip", "id", context.getPackageName()));
+    mVideoThumbRecyclerView = findViewById(context.getResources().getIdentifier("video_frames_recyclerView", "id", context.getPackageName()));
 
     /*
     LayoutInflater.from(context).inflate(R.layout.video_trimmer_view, this, true);
@@ -147,7 +147,7 @@ public class VideoTrimmerView extends FrameLayout implements IVideoTrimmerView {
     mVideoView.setVideoURI(videoURI);
     mVideoView.requestFocus();
     // mVideoShootTipTv.setText(String.format(mContext.getResources().getString(R.string.video_shoot_tip), VideoTrimmerUtil.VIDEO_MAX_TIME));
-    mVideoShootTipTv.setText(String.format(mContext.getResources().getString(getResources(), getResources().getIdentifier("video_shoot_tip", "string", getPackageName())), VideoTrimmerUtil.VIDEO_MAX_TIME));
+    mVideoShootTipTv.setText(String.format(mContext.getResources().getString(getResources().getIdentifier("video_shoot_tip", "string", mContext.getPackageName())), VideoTrimmerUtil.VIDEO_MAX_TIME));
   }
 
   private void startShootVideoThumbs(final Context context, final Uri videoUri, int totalThumbsCount, long startPosition, long endPosition) {
@@ -236,7 +236,7 @@ public class VideoTrimmerView extends FrameLayout implements IVideoTrimmerView {
   }
 
   private void setUpListeners() {
-    findViewById(getResources(), getResources().getIdentifier("cancelBtn", "id", getPackageName())).setOnClickListener(new OnClickListener() {
+    findViewById(getResources().getIdentifier("cancelBtn", "id", mContext.getPackageName())).setOnClickListener(new OnClickListener() {
     // findViewById(R.id.cancelBtn).setOnClickListener(new OnClickListener() {
       @Override
       public void onClick(View view) {
@@ -244,7 +244,7 @@ public class VideoTrimmerView extends FrameLayout implements IVideoTrimmerView {
       }
     });
 
-    findViewById(getResources(), getResources().getIdentifier("finishBtn", "id", getPackageName())).setOnClickListener(new OnClickListener() {
+    findViewById(getResources().getIdentifier("finishBtn", "id", mContext.getPackageName())).setOnClickListener(new OnClickListener() {
     // findViewById(R.id.finishBtn).setOnClickListener(new OnClickListener() {
       @Override
       public void onClick(View view) {
@@ -302,7 +302,11 @@ public class VideoTrimmerView extends FrameLayout implements IVideoTrimmerView {
   private void setPlayPauseViewIcon(boolean isPlaying) {
     // getResources(), getResources().getIdentifier("ic_video_thumb_handle", "drawable", getPackageName())
     // mPlayView.setImageResource(isPlaying ? R.drawable.ic_video_pause_black : R.drawable.ic_video_play_black);
-    mPlayView.setImageResource(isPlaying ? getResources().getIdentifier("ic_video_pause_black", "drawable", getPackageName()) : getResources(), getResources().getIdentifier("ic_video_play_black", "drawable", getPackageName()));
+    mPlayView.setImageResource(
+      isPlaying ?
+      getResources().getIdentifier("ic_video_pause_black", "drawable", mContext.getPackageName()) :
+      getResources().getIdentifier("ic_video_play_black", "drawable", mContext.getPackageName())
+    );
   }
 
   private final RangeSeekBarView.OnRangeSeekBarChangeListener mOnRangeSeekBarChangeListener = new RangeSeekBarView.OnRangeSeekBarChangeListener() {

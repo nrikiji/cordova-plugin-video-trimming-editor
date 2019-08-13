@@ -35,7 +35,7 @@ public class VideoTrimmerAdapter extends RecyclerView.Adapter {
   @NonNull @Override
   public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
     // return new TrimmerViewHolder(mInflater.inflate(R.layout.video_thumb_item_layout, parent, false));
-      return new TrimmerViewHolder(mInflater.inflate(getResources().getIdentifier("video_thumb_item_layout", "layout", getPackageName()), parent, false));
+    return new TrimmerViewHolder(mInflater.inflate(this.context.getResources().getIdentifier("video_thumb_item_layout", "layout", this.context.getPackageName()), parent, false));
   }
 
   @Override
@@ -59,7 +59,7 @@ public class VideoTrimmerAdapter extends RecyclerView.Adapter {
     TrimmerViewHolder(View itemView) {
       super(itemView);
       // thumbImageView = itemView.findViewById(R.id.thumb);
-      thumbImageView = itemView.findViewById(getResources().getIdentifier("thumb", "id", getPackageName()));
+      thumbImageView = itemView.findViewById(context.getResources().getIdentifier("thumb", "id", context.getPackageName()));
       LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) thumbImageView.getLayoutParams();
       layoutParams.width = VideoTrimmerUtil.VIDEO_FRAMES_WIDTH / VideoTrimmerUtil.MAX_COUNT_RANGE;
       thumbImageView.setLayoutParams(layoutParams);
