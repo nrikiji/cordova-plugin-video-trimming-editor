@@ -1,0 +1,16 @@
+{
+    "name": "cordova-plugin-video-trimming-editor",
+    "version": "0.0.1",
+    "description": "",
+    "cordova": {
+        "id": "cordova-plugin-video-trimming-editor",
+        "platforms": [
+            "android",
+            "ios"
+        ]
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/nrikiji/cordova-plugin-video-trimming-editor"
+    }
+}
