@@ -31,11 +31,15 @@
         <param name="android-package" value="plugin.videotrimmingeditor.VideoTrimmingEditor"/>
       </feature>
     </config-file>
-    <edit-config file="app/src/main/AndroidManifest.xml" mode="merge" target="/manifest/application" xmlns:android="http://schemas.android.com/apk/res/android">
+    <!--
+    <config-file target="AndroidManifest.xml" parent="/*">
       <application android:name="plugin.videotrimmingeditor.ZApplication" />
       <activity android:name="plugin.videotrimmingeditor.features.select.VideoSelectActivity"></activity>
       <activity android:name="plugin.videotrimmingeditor.features.trim.VideoTrimmerActivity"></activity>
-    </edit-config>
+      </config-file>
+      -->
+
+    <hook type="after_prepare" src="src/scripts/android_after_prepare.js" />
 
     <source-file src="src/android/src/VideoTrimmingEditor.java" target-dir="src/plugin/videotrimmingeditor" />
     <source-file src="src/android/src/ZApplication.java" target-dir="src/plugin/videotrimmingeditor" />
