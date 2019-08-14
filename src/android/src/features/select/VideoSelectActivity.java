@@ -7,7 +7,7 @@ import androidx.databinding.DataBindingUtil;
 import android.view.View;
 
 // import nrikiji.trimsample.R;
-import plugin.videotrimmingeditor.databinding.ActivityVideoSelectBinding;
+import nrikiji.videotrimmingeditorSample.databinding.ActivityVideoSelectBinding;
 import plugin.videotrimmingeditor.features.common.ui.BaseActivity;
 import plugin.videotrimmingeditor.features.record.VideoRecordActivity;
 import plugin.videotrimmingeditor.features.record.view.CameraPreviewLayout;
@@ -40,7 +40,7 @@ public class VideoSelectActivity extends BaseActivity implements View.OnClickLis
     mBinding = DataBindingUtil.setContentView(this, R.layout.activity_video_select);
     cameraPreviewLayout = findViewById(R.id.capturePreview);
     */
-    mBinding = DataBindingUtil.setContentView(getResources().getIdentifier("activity_video_select", "layout", getPackageName()));
+    mBinding = DataBindingUtil.setContentView(this, getResources().getIdentifier("activity_video_select", "layout", getPackageName()));
     cameraPreviewLayout = findViewById(getResources().getIdentifier("capturePreview", "id", getPackageName()));
 
     mBinding.mBtnBack.setOnClickListener(this);

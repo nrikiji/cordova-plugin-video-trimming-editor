@@ -53,11 +53,11 @@ public class VideoSelectAdapter extends CursorAdapter {
     holder.videoCover = itemView.findViewById(R.id.cover_image);
     holder.durationTv = itemView.findViewById(R.id.video_duration);
     */
-    View itemView = inflater.inflate(getResources().getIdentifier("video_select_gridview_item", "layout", getPackageName()), null);
+    View itemView = inflater.inflate(mContext.getResources().getIdentifier("video_select_gridview_item", "layout", mContext.getPackageName()), null);
     VideoGridViewHolder holder = new VideoGridViewHolder();
-    holder.videoItemView = itemView.findViewById(getResources().getIdentifier("video_view", "id", getPackageName()));
-    holder.videoCover = itemView.findViewById(getResources().getIdentifier("cover_image", "id", getPackageName()));
-    holder.durationTv = itemView.findViewById(getResources().getIdentifier("video_duration", "id", getPackageName()));
+    holder.videoItemView = itemView.findViewById(mContext.getResources().getIdentifier("video_view", "id", mContext.getPackageName()));
+    holder.videoCover = itemView.findViewById(mContext.getResources().getIdentifier("cover_image", "id", mContext.getPackageName()));
+    holder.durationTv = itemView.findViewById(mContext.getResources().getIdentifier("video_duration", "id", mContext.getPackageName()));
     itemView.setTag(holder);
     return itemView;
   }

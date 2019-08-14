@@ -6,7 +6,7 @@ import android.os.Environment;
 import android.text.TextUtils;
 import android.util.Log;
 
-import nrikiji.trimsample.BuildConfig;
+import nrikiji.videotrimmingeditorSample.BuildConfig;
 
 import java.io.File;
 import java.io.IOException;
