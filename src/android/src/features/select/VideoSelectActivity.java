@@ -7,7 +7,7 @@ import androidx.databinding.DataBindingUtil;
 import android.view.View;
 
 // import nrikiji.trimsample.R;
-import nrikiji.videotrimmingeditorSample.databinding.ActivityVideoSelectBinding;
+import nrikiji.videotrimmingeditorsample.databinding.ActivityVideoSelectBinding;
 import plugin.videotrimmingeditor.features.common.ui.BaseActivity;
 import plugin.videotrimmingeditor.features.record.VideoRecordActivity;
 import plugin.videotrimmingeditor.features.record.view.CameraPreviewLayout;

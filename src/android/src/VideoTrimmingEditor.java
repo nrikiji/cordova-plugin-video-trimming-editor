@@ -1,12 +1,15 @@
 package plugin.videotrimmingeditor;
 
 import android.content.Context;
+import android.content.Intent;
 
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaPlugin;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import plugin.videotrimmingeditor.features.select.VideoSelectActivity;
 
 public class VideoTrimmingEditor extends CordovaPlugin {
 
@@ -15,11 +18,9 @@ public class VideoTrimmingEditor extends CordovaPlugin {
         if (action.equals("open")) {
             JSONObject params = data.getJSONObject(0);
 
-            String strLatitude = params.get("latitude").toString();
-            String strLongitude = params.get("longitude").toString();
-
-            double latitude = Double.parseDouble(strLatitude);
-            double longitude = Double.parseDouble(strLongitude);
+            Context context = cordova.getActivity().getApplicationContext();
+            Intent intent = new Intent(context, VideoSelectActivity.class);
+            this.cordova.getActivity().startActivity(intent);
 
             return true;
         } else {

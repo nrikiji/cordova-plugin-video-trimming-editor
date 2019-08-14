@@ -10,7 +10,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 // import nrikiji.trimsample.R;
-import nrikiji.videotrimmingeditorSample.databinding.ActivityVideoTrimBinding;
+import nrikiji.videotrimmingeditorsample.databinding.ActivityVideoTrimBinding;
 import plugin.videotrimmingeditor.features.common.ui.BaseActivity;
 import plugin.videotrimmingeditor.interfaces.VideoTrimListener;
 import plugin.videotrimmingeditor.utils.ToastUtil;
