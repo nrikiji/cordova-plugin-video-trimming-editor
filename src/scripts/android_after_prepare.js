@@ -8,15 +8,9 @@ module.exports = function(context) {
   var platformRoot = path.join(context.opts.projectRoot, 'platforms/android/app/src/main');
   var manifestFile = path.join(platformRoot, 'AndroidManifest.xml');
 
-  console.log('############### Start');
-  console.log(manifestFile);
-
   if (fs.existsSync(manifestFile)) {
 
     fs.readFile(manifestFile, 'utf8', function (err,data) {
-
-      console.log(err);
-      console.log(data);
       
       if (err) {
         throw new Error('Unable to find AndroidManifest.xml: ' + err);
