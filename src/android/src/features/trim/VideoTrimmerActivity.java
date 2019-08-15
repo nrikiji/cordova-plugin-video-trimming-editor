@@ -10,9 +10,14 @@ import android.text.TextUtils;
 import android.util.Log;
 
 // import nrikiji.trimsample.R;
+import java.io.File;
+
 import nrikiji.videotrimmingeditorsample.databinding.ActivityVideoTrimBinding;
 import plugin.videotrimmingeditor.features.common.ui.BaseActivity;
+import plugin.videotrimmingeditor.features.compress.VideoCompressor;
+import plugin.videotrimmingeditor.interfaces.VideoCompressListener;
 import plugin.videotrimmingeditor.interfaces.VideoTrimListener;
+import plugin.videotrimmingeditor.utils.StorageUtil;
 import plugin.videotrimmingeditor.utils.ToastUtil;
 
 /**
@@ -83,22 +88,26 @@ public class VideoTrimmerActivity extends BaseActivity implements VideoTrimListe
     if (mProgressDialog.isShowing()) mProgressDialog.dismiss();
     // ToastUtil.longShow(this, getString(R.string.trimmed_done));
     ToastUtil.longShow(this, getString(getResources().getIdentifier("trimmed_done", "string", getPackageName())));
-    finish();
+
+    // finish();
     //TODO: please handle your trimmed video url here!!!
-    //String out = StorageUtil.getCacheDir() + File.separator + COMPRESSED_VIDEO_FILE_NAME;
-    //buildDialog(getResources().getString(R.string.compressing)).show();
-    //VideoCompressor.compress(this, in, out, new VideoCompressListener() {
-    //  @Override public void onSuccess(String message) {
-    //  }
-    //
-    //  @Override public void onFailure(String message) {
-    //  }
-    //
-    //  @Override public void onFinish() {
-    //    if (mProgressDialog.isShowing()) mProgressDialog.dismiss();
-    //    finish();
-    //  }
-    //});
+    String out = StorageUtil.getCacheDir() + File.separator + COMPRESSED_VIDEO_FILE_NAME;
+    // buildDialog(getResources().getString(R.string.compressing)).show();
+    buildDialog(getResources().getString(getResources().getIdentifier("compressing", "string", getPackageName()))).show();
+    VideoCompressor.compress(this, in, out, new VideoCompressListener() {
+      @Override public void onSuccess(String message) {
+        Log.d("","success");
+      }
+
+      @Override public void onFailure(String message) {
+        Log.d("","failed");
+      }
+
+      @Override public void onFinish() {
+        if (mProgressDialog.isShowing()) mProgressDialog.dismiss();
+        finish();
+      }
+    });
   }
 
   @Override
