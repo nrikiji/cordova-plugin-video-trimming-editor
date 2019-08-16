@@ -14,11 +14,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
-// import nrikiji.trimsample.R;
 import plugin.videotrimmingeditor.features.common.ui.BaseActivity;
-import plugin.videotrimmingeditor.features.record.VideoRecordActivity;
-import plugin.videotrimmingeditor.features.record.view.CameraPreviewLayout;
-import plugin.videotrimmingeditor.features.record.view.PreviewSurfaceView;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import iknow.android.utils.callback.SimpleCallback;
