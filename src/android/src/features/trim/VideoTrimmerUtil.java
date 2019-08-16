@@ -33,15 +33,31 @@ public class VideoTrimmerUtil {
 
   private static final String TAG = VideoTrimmerUtil.class.getSimpleName();
   public static final long MIN_SHOOT_DURATION = 3000L;// 最小剪辑时间3s
-  public static final int VIDEO_MAX_TIME = 30;// 10秒
-  public static final long MAX_SHOOT_DURATION = VIDEO_MAX_TIME * 1000L;//视频最多剪切多长时间10s
-
+  // public static final int VIDEO_MAX_TIME = 10;// 10秒
+  private static int VIDEO_MAX_TIME = 10;
+  // public static final long MAX_SHOOT_DURATION = VIDEO_MAX_TIME * 1000L;//视频最多剪切多长时间10s
   public static final int MAX_COUNT_RANGE = 10;  //seekBar的区域内一共有多少张图片
   private static final int SCREEN_WIDTH_FULL = DeviceUtil.getDeviceWidth();
   public static final int RECYCLER_VIEW_PADDING = UnitConverter.dpToPx(35);
   public static final int VIDEO_FRAMES_WIDTH = SCREEN_WIDTH_FULL - RECYCLER_VIEW_PADDING * 2;
-  private static final int THUMB_WIDTH = (SCREEN_WIDTH_FULL - RECYCLER_VIEW_PADDING * 2) / VIDEO_MAX_TIME;
+  // private static final int THUMB_WIDTH = (SCREEN_WIDTH_FULL - RECYCLER_VIEW_PADDING * 2) / VIDEO_MAX_TIME;
   private static final int THUMB_HEIGHT = UnitConverter.dpToPx(50);
+
+  public static int getVideoMaxTime() {
+    return VIDEO_MAX_TIME;
+  }
+
+  public static void setVideoMaxTime(int videoMaxTime) {
+    VIDEO_MAX_TIME = videoMaxTime;
+  }
+
+  public static long getMaxShootDuration() {
+    return getVideoMaxTime() * 1000L;
+  }
+
+  private static int getTHumbWidth() {
+    return (SCREEN_WIDTH_FULL - RECYCLER_VIEW_PADDING * 2) / getVideoMaxTime();
+  }
 
   public static void trim(Context context, String inputFile, String outputFile, long startMs, long endMs, final VideoTrimListener callback) {
     final String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
@@ -81,7 +97,7 @@ public class VideoTrimmerUtil {
             Bitmap bitmap = mediaMetadataRetriever.getFrameAtTime(frameTime * 1000, MediaMetadataRetriever.OPTION_CLOSEST_SYNC);
             if(bitmap == null) continue;
             try {
-              bitmap = Bitmap.createScaledBitmap(bitmap, THUMB_WIDTH, THUMB_HEIGHT, false);
+              bitmap = Bitmap.createScaledBitmap(bitmap, getTHumbWidth(), THUMB_HEIGHT, false);
             } catch (final Throwable t) {
               t.printStackTrace();
             }

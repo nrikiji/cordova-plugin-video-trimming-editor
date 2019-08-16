@@ -118,14 +118,17 @@ public class VideoTrimmerView extends FrameLayout implements IVideoTrimmerView {
     if(mRangeSeekBarView != null) return;
     int rangeWidth;
     mLeftProgressPos = 0;
-    if (mDuration <= VideoTrimmerUtil.MAX_SHOOT_DURATION) {
+    // if (mDuration <= VideoTrimmerUtil.MAX_SHOOT_DURATION) {
+    if (mDuration <= VideoTrimmerUtil.getMaxShootDuration()) {
       mThumbsTotalCount = VideoTrimmerUtil.MAX_COUNT_RANGE;
       rangeWidth = mMaxWidth;
       mRightProgressPos = mDuration;
     } else {
-      mThumbsTotalCount = (int) (mDuration * 1.0f / (VideoTrimmerUtil.MAX_SHOOT_DURATION * 1.0f) * VideoTrimmerUtil.MAX_COUNT_RANGE);
+      // mThumbsTotalCount = (int) (mDuration * 1.0f / (VideoTrimmerUtil.MAX_SHOOT_DURATION * 1.0f) * VideoTrimmerUtil.MAX_COUNT_RANGE);
+      mThumbsTotalCount = (int) (mDuration * 1.0f / (VideoTrimmerUtil.getMaxShootDuration() * 1.0f) * VideoTrimmerUtil.MAX_COUNT_RANGE);
       rangeWidth = mMaxWidth / VideoTrimmerUtil.MAX_COUNT_RANGE * mThumbsTotalCount;
-      mRightProgressPos = VideoTrimmerUtil.MAX_SHOOT_DURATION;
+      // mRightProgressPos = VideoTrimmerUtil.MAX_SHOOT_DURATION;
+      mRightProgressPos = VideoTrimmerUtil.getMaxShootDuration();
     }
     mVideoThumbRecyclerView.addItemDecoration(new SpacesItemDecoration2(VideoTrimmerUtil.RECYCLER_VIEW_PADDING, mThumbsTotalCount));
     mRangeSeekBarView = new RangeSeekBarView(mContext, mLeftProgressPos, mRightProgressPos);
@@ -146,7 +149,8 @@ public class VideoTrimmerView extends FrameLayout implements IVideoTrimmerView {
     mVideoView.setVideoURI(videoURI);
     mVideoView.requestFocus();
     // mVideoShootTipTv.setText(String.format(mContext.getResources().getString(R.string.video_shoot_tip), VideoTrimmerUtil.VIDEO_MAX_TIME));
-    mVideoShootTipTv.setText(String.format(mContext.getResources().getString(getResources().getIdentifier("video_shoot_tip", "string", mContext.getPackageName())), VideoTrimmerUtil.VIDEO_MAX_TIME));
+    // mVideoShootTipTv.setText(String.format(mContext.getResources().getString(getResources().getIdentifier("video_shoot_tip", "string", mContext.getPackageName())), VideoTrimmerUtil.VIDEO_MAX_TIME));
+    mVideoShootTipTv.setText(String.format(mContext.getResources().getString(getResources().getIdentifier("video_shoot_tip", "string", mContext.getPackageName())), VideoTrimmerUtil.getVideoMaxTime()));
   }
 
   private void startShootVideoThumbs(final Context context, final Uri videoUri, int totalThumbsCount, long startPosition, long endPosition) {
