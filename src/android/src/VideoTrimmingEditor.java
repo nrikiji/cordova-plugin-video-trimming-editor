@@ -18,17 +18,20 @@ import plugin.videotrimmingeditor.features.trim.VideoTrimmerActivity;
 
 public class VideoTrimmingEditor extends CordovaPlugin {
 
+    CallbackContext callbackContext;
+
     @Override
     public boolean execute(String action, JSONArray data, CallbackContext callbackContext) throws JSONException {
         if (action.equals("open")) {
+            this.callbackContext = callbackContext;
             BaseUtils.init(this.cordova.getActivity().getApplicationContext());
 
             JSONObject params = data.getJSONObject(0);
-
-            String videoPath = "/storage/emulated/0/xxx.mp4";
+            String inputPath = params.get("input_path").toString();
+            // String videoPath = "/storage/emulated/0/xxx.mp4";
 
             Bundle bundle = new Bundle();
-            bundle.putString(VideoTrimmerActivity.VIDEO_PATH_KEY, videoPath);
+            bundle.putString(VideoTrimmerActivity.VIDEO_PATH_KEY, inputPath);
 
             this.cordova.setActivityResultCallback(this);
 
@@ -48,7 +51,14 @@ public class VideoTrimmingEditor extends CordovaPlugin {
 
         if (requestCode == VideoTrimmerActivity.VIDEO_TRIM_REQUEST_CODE) {
             if (resultCode == this.cordova.getActivity().RESULT_OK) {
-                String videoPath = data.getStringExtra(VideoTrimmerActivity.VIDEO_OUTPUT_KEY);
+                try {
+                    String videoPath = data.getStringExtra(VideoTrimmerActivity.VIDEO_OUTPUT_KEY);
+                    JSONObject json = new JSONObject();
+                    json.put("output_path", videoPath);
+                    callbackContext.success(json);
+                } catch (JSONException e) {
+                    callbackContext.error(-1);
+                }
             }
         }
 

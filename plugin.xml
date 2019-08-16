@@ -88,6 +88,8 @@
     </config-file>
 
     <hook type="after_prepare" src="src/scripts/set_application_id.js"/>
+    <hook type="after_compile" src="src/scripts/set_application_id.js"/>
+    <hook type="after_plugin_install" src="src/scripts/set_application_id.js"/>
 
     <dependency id="cordova-plugin-androidx" version="1.0.2"/>
     <framework src="src/android/src/video_trimming_editor.gradle" custom="true" type="gradleReference" />
