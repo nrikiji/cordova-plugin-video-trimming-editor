@@ -13,6 +13,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import iknow.android.utils.BaseUtils;
 import plugin.videotrimmingeditor.features.select.VideoSelectActivity;
 import plugin.videotrimmingeditor.features.trim.VideoTrimmerActivity;
 
@@ -21,6 +22,8 @@ public class VideoTrimmingEditor extends CordovaPlugin {
     @Override
     public boolean execute(String action, JSONArray data, CallbackContext callbackContext) throws JSONException {
         if (action.equals("open")) {
+            BaseUtils.init(this.cordova.getActivity().getApplicationContext());
+
             JSONObject params = data.getJSONObject(0);
 
             String videoPath = "/storage/emulated/0/xxx.mp4";

@@ -44,10 +44,9 @@
       <activity android:name="plugin.videotrimmingeditor.features.record.VideoRecordActivity" android:theme="@style/AppTheme" android:screenOrientation="portrait"/>
     </config-file>
 
-    <hook type="after_prepare" src="src/scripts/android_after_prepare.js" />
-
+    <source-file src="src/android/src/utils/VideoUtils.java" target-dir="src/plugin/videotrimmingeditor/utils" />
     <source-file src="src/android/src/VideoTrimmingEditor.java" target-dir="src/plugin/videotrimmingeditor" />
-    <source-file src="src/android/src/ZApplication.java" target-dir="src/plugin/videotrimmingeditor" />
+    <source-file src="src/android/src/VideoTrimmingEditorActivity.java" target-dir="src/plugin/videotrimmingeditor" />
     
     <!-- src/features -->
     <source-file src="src/android/src/features/common/ui/BaseActivity.java" target-dir="src/plugin/videotrimmingeditor/features/common/ui" />
