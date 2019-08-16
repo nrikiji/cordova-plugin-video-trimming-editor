@@ -10,8 +10,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-// import nrikiji.trimsample.R;
-
 import java.util.ArrayList;
 import java.util.List;
 

@@ -17,7 +17,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
 
-// import nrikiji.trimsample.R;
 import plugin.videotrimmingeditor.features.trim.VideoTrimmerUtil;
 
 import java.text.DecimalFormat;

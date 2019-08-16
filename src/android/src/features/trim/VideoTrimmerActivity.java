@@ -9,7 +9,6 @@ import androidx.fragment.app.FragmentActivity;
 import android.text.TextUtils;
 import android.util.Log;
 
-// import nrikiji.trimsample.R;
 import java.io.File;
 
 import nrikiji.videotrimmingeditorsample.databinding.ActivityVideoTrimBinding;

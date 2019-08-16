@@ -22,7 +22,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-// import nrikiji.trimsample.R;
 import plugin.videotrimmingeditor.features.trim.VideoTrimmerAdapter;
 import plugin.videotrimmingeditor.features.trim.VideoTrimmerUtil;
 import plugin.videotrimmingeditor.interfaces.IVideoTrimmerView;
