@@ -36,6 +36,8 @@ public class VideoTrimmerActivity extends BaseActivity implements VideoTrimListe
   private ProgressDialog mProgressDialog;
 
   public static void call(FragmentActivity from, String videoPath) {
+    Log.d("","########");
+    Log.d("",videoPath);
     if (!TextUtils.isEmpty(videoPath)) {
       Bundle bundle = new Bundle();
       bundle.putString(VIDEO_PATH_KEY, videoPath);

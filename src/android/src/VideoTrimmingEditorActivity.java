@@ -2,6 +2,7 @@ package plugin.videotrimmingeditor;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 
@@ -32,14 +33,20 @@ public class VideoTrimmingEditorActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
 
         // String path = "/storage/emulated/0/CROOZBlog/34176116/EDIT/f4930454-bd6f-4499-816c-1d24ab0941bf.mp4";
-        String path = "/storage/emulated/0/DCIM/Camera/VID_20180928_195930.mp4";
-        VideoTrimmerActivity.call((FragmentActivity) VideoTrimmingEditorActivity.this, path);
+        // String path = "/storage/emulated/0/DCIM/Camera/VID_20180928_195930.mp4";
+        // String path = "/storage/emulated/0/xxx.mp4";
+        // VideoTrimmerActivity.call((FragmentActivity) VideoTrimmingEditorActivity.this, path);
+
+        String path = "/storage/emulated/0/xxx.mp4";
+        Context context = this;
+        VideoTrimmerActivity.call((FragmentActivity) context, path);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         Log.d("","戻ってきたよー!!");
+        finish();
     }
 
     @Override

@@ -21,6 +21,10 @@ public class VideoTrimmingEditor extends CordovaPlugin {
         if (action.equals("open")) {
             JSONObject params = data.getJSONObject(0);
 
+            Context context = cordova.getActivity().getApplicationContext();
+            Intent intent = new Intent(context, VideoTrimmingEditorActivity.class);
+            this.cordova.getActivity().startActivity(intent);
+
             /*
             String path = "/storage/emulated/0/CROOZBlog/34176116/EDIT/f4930454-bd6f-4499-816c-1d24ab0941bf.mp4";
             Context context = cordova.getActivity();
@@ -29,9 +33,11 @@ public class VideoTrimmingEditor extends CordovaPlugin {
             this.cordova.getActivity().startActivity(intent);
             */
 
+            /*
             Context context = cordova.getActivity().getApplicationContext();
             Intent intent = new Intent(context, VideoSelectActivity.class);
             this.cordova.getActivity().startActivity(intent);
+            */
 
             /*
             Context context = cordova.getActivity().getApplicationContext();
