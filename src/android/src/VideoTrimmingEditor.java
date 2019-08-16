@@ -15,6 +15,7 @@ import org.json.JSONObject;
 
 import iknow.android.utils.BaseUtils;
 import plugin.videotrimmingeditor.features.trim.VideoTrimmerActivity;
+import plugin.videotrimmingeditor.features.trim.VideoTrimmerUtil;
 
 public class VideoTrimmingEditor extends CordovaPlugin {
 
@@ -28,10 +29,11 @@ public class VideoTrimmingEditor extends CordovaPlugin {
 
             JSONObject params = data.getJSONObject(0);
             String inputPath = params.get("input_path").toString();
-            // String videoPath = "/storage/emulated/0/xxx.mp4";
+            int videoMaxTime = params.getInt("video_max_time");
 
             Bundle bundle = new Bundle();
             bundle.putString(VideoTrimmerActivity.VIDEO_PATH_KEY, inputPath);
+            VideoTrimmerUtil.setVideoMaxTime(videoMaxTime);
 
             this.cordova.setActivityResultCallback(this);
 
