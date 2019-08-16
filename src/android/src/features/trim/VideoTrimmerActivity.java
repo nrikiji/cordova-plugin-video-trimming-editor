@@ -29,15 +29,14 @@ import plugin.videotrimmingeditor.utils.ToastUtil;
 public class VideoTrimmerActivity extends BaseActivity implements VideoTrimListener {
 
   private static final String TAG = "jason";
-  private static final String VIDEO_PATH_KEY = "video-file-path";
+  public static final String VIDEO_PATH_KEY = "video-file-path";
+  public static final String VIDEO_OUTPUT_KEY = "video-output-path";
   private static final String COMPRESSED_VIDEO_FILE_NAME = "compress.mp4";
   public static final int VIDEO_TRIM_REQUEST_CODE = 0x001;
   private ActivityVideoTrimBinding mBinding;
   private ProgressDialog mProgressDialog;
 
   public static void call(FragmentActivity from, String videoPath) {
-    Log.d("","########");
-    Log.d("",videoPath);
     if (!TextUtils.isEmpty(videoPath)) {
       Bundle bundle = new Bundle();
       bundle.putString(VIDEO_PATH_KEY, videoPath);
@@ -54,7 +53,6 @@ public class VideoTrimmerActivity extends BaseActivity implements VideoTrimListe
     Bundle bd = getIntent().getExtras();
     String path = "";
     if (bd != null) path = bd.getString(VIDEO_PATH_KEY);
-    Log.d("",path);
     if (mBinding.trimmerView != null) {
       mBinding.trimmerView.setOnTrimVideoListener(this);
       mBinding.trimmerView.initVideoByURI(Uri.parse(path));
@@ -91,7 +89,11 @@ public class VideoTrimmerActivity extends BaseActivity implements VideoTrimListe
     // ToastUtil.longShow(this, getString(R.string.trimmed_done));
     ToastUtil.longShow(this, getString(getResources().getIdentifier("trimmed_done", "string", getPackageName())));
 
+    Intent intent = new Intent();
+    intent.putExtra(this.VIDEO_OUTPUT_KEY, in);
+    setResult(RESULT_OK, intent);
     finish();
+
     //TODO: please handle your trimmed video url here!!!
 //    String out = StorageUtil.getCacheDir() + File.separator + COMPRESSED_VIDEO_FILE_NAME;
     // buildDialog(getResources().getString(R.string.compressing)).show();

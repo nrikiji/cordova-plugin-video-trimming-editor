@@ -2,6 +2,8 @@ package plugin.videotrimmingeditor;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
+import android.util.Log;
 
 import androidx.fragment.app.FragmentActivity;
 
@@ -21,29 +23,17 @@ public class VideoTrimmingEditor extends CordovaPlugin {
         if (action.equals("open")) {
             JSONObject params = data.getJSONObject(0);
 
+            String videoPath = "/storage/emulated/0/xxx.mp4";
+
+            Bundle bundle = new Bundle();
+            bundle.putString(VideoTrimmerActivity.VIDEO_PATH_KEY, videoPath);
+
+            this.cordova.setActivityResultCallback(this);
+
             Context context = cordova.getActivity().getApplicationContext();
             Intent intent = new Intent(context, VideoTrimmingEditorActivity.class);
-            this.cordova.getActivity().startActivity(intent);
-
-            /*
-            String path = "/storage/emulated/0/CROOZBlog/34176116/EDIT/f4930454-bd6f-4499-816c-1d24ab0941bf.mp4";
-            Context context = cordova.getActivity();
-            VideoTrimmerActivity.call((FragmentActivity) context, path);
-            Intent intent = new Intent(context, VideoTrimmerActivity.class);
-            this.cordova.getActivity().startActivity(intent);
-            */
-
-            /*
-            Context context = cordova.getActivity().getApplicationContext();
-            Intent intent = new Intent(context, VideoSelectActivity.class);
-            this.cordova.getActivity().startActivity(intent);
-            */
-
-            /*
-            Context context = cordova.getActivity().getApplicationContext();
-            Intent intent = new Intent(context, VideoTrimmerActivity.class);
-            this.cordova.getActivity().startActivity(intent);
-            */
+            intent.putExtras(bundle);
+            this.cordova.getActivity().startActivityForResult(intent, VideoTrimmerActivity.VIDEO_TRIM_REQUEST_CODE);
 
             return true;
         } else {
@@ -51,4 +41,14 @@ public class VideoTrimmingEditor extends CordovaPlugin {
         }
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if (requestCode == VideoTrimmerActivity.VIDEO_TRIM_REQUEST_CODE) {
+            if (resultCode == this.cordova.getActivity().RESULT_OK) {
+                String videoPath = data.getStringExtra(VideoTrimmerActivity.VIDEO_OUTPUT_KEY);
+            }
+        }
+
+    }
 }

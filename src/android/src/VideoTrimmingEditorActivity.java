@@ -32,20 +32,26 @@ public class VideoTrimmingEditorActivity extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // String path = "/storage/emulated/0/CROOZBlog/34176116/EDIT/f4930454-bd6f-4499-816c-1d24ab0941bf.mp4";
-        // String path = "/storage/emulated/0/DCIM/Camera/VID_20180928_195930.mp4";
-        // String path = "/storage/emulated/0/xxx.mp4";
-        // VideoTrimmerActivity.call((FragmentActivity) VideoTrimmingEditorActivity.this, path);
+        Bundle bd = getIntent().getExtras();
+        String path = "";
+        if (bd != null) path = bd.getString(VideoTrimmerActivity.VIDEO_PATH_KEY);
 
-        String path = "/storage/emulated/0/xxx.mp4";
-        Context context = this;
-        VideoTrimmerActivity.call((FragmentActivity) context, path);
+        VideoTrimmerActivity.call((FragmentActivity) this, path);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.d("","戻ってきたよー!!");
+
+        if (requestCode == VideoTrimmerActivity.VIDEO_TRIM_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                String videoPath = data.getStringExtra(VideoTrimmerActivity.VIDEO_OUTPUT_KEY);
+                Intent intent = new Intent();
+                intent.putExtra(VideoTrimmerActivity.VIDEO_OUTPUT_KEY, videoPath);
+                setResult(RESULT_OK, intent);
+            }
+        }
+
         finish();
     }
 
