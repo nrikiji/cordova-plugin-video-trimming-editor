@@ -53,13 +53,11 @@
     <source-file src="src/android/src/features/trim/VideoTrimmerAdapter.java" target-dir="src/plugin/videotrimmingeditor/features/trim" />
     <source-file src="src/android/src/features/trim/VideoTrimmerUtil.java" target-dir="src/plugin/videotrimmingeditor/features/trim" />
     <!-- src/interfaces -->
-    <source-file src="src/android/src/interfaces/IBaseUI.java" target-dir="src/plugin/videotrimmingeditor/interfaces" />
     <source-file src="src/android/src/interfaces/IVideoTrimmerView.java" target-dir="src/plugin/videotrimmingeditor/interfaces" />
     <source-file src="src/android/src/interfaces/VideoCompressListener.java" target-dir="src/plugin/videotrimmingeditor/interfaces" />
     <source-file src="src/android/src/interfaces/VideoTrimListener.java" target-dir="src/plugin/videotrimmingeditor/interfaces" />
     <!-- src/widget -->
     <source-file src="src/android/src/widget/RangeSeekBarView.java" target-dir="src/plugin/videotrimmingeditor/widget" />
-    <source-file src="src/android/src/widget/SpacesItemDecoration.java" target-dir="src/plugin/videotrimmingeditor/widget" />
     <source-file src="src/android/src/widget/SpacesItemDecoration2.java" target-dir="src/plugin/videotrimmingeditor/widget" />
     <source-file src="src/android/src/widget/VideoTrimmerView.java" target-dir="src/plugin/videotrimmingeditor/widget" />
     <source-file src="src/android/src/widget/ZVideoView.java" target-dir="src/plugin/videotrimmingeditor/widget" />
@@ -67,8 +65,6 @@
     <source-file src="src/android/src/utils/StorageUtil.java" target-dir="src/plugin/videotrimmingeditor/utils" />
     <source-file src="src/android/src/utils/ToastUtil.java" target-dir="src/plugin/videotrimmingeditor/utils" />
     <source-file src="src/android/src/utils/UIThreadUtil.java" target-dir="src/plugin/videotrimmingeditor/utils" />
-    <!-- src/models -->
-    <source-file src="src/android/src/models/VideoInfo.java" target-dir="src/plugin/videotrimmingeditor/models" />
     
     <!-- res/layout -->
     <source-file src="src/android/res/layout/activity_main.xml" target-dir="res/layout"/>
