@@ -32,11 +32,10 @@
       </feature>
     </config-file>
     <config-file target="AndroidManifest.xml" parent="/manifest">
-      <uses-permission android:name="android.permission.RECORD_AUDIO" />
-      <uses-permission android:name="android.permission.RECORD_VIDEO" />
       <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
       <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     </config-file>
+
     <config-file target="AndroidManifest.xml" parent="/manifest/application">
       <activity android:name="plugin.videotrimmingeditor.VideoTrimmingEditorActivity" android:theme="@style/AppTheme" android:screenOrientation="portrait"/>
       <activity android:name="plugin.videotrimmingeditor.features.trim.VideoTrimmerActivity" android:theme="@style/AppTheme" android:screenOrientation="portrait"/>
@@ -45,43 +44,36 @@
     <source-file src="src/android/src/utils/VideoUtils.java" target-dir="src/plugin/videotrimmingeditor/utils" />
     <source-file src="src/android/src/VideoTrimmingEditor.java" target-dir="src/plugin/videotrimmingeditor" />
     <source-file src="src/android/src/VideoTrimmingEditorActivity.java" target-dir="src/plugin/videotrimmingeditor" />
-    
-    <!-- src/features -->
+
     <source-file src="src/android/src/features/common/ui/BaseActivity.java" target-dir="src/plugin/videotrimmingeditor/features/common/ui" />
     <source-file src="src/android/src/features/compress/VideoCompressor.java" target-dir="src/plugin/videotrimmingeditor/features/compress" />
     <source-file src="src/android/src/features/trim/VideoTrimmerActivity.java" target-dir="src/plugin/videotrimmingeditor/features/trim" />
     <source-file src="src/android/src/features/trim/VideoTrimmerAdapter.java" target-dir="src/plugin/videotrimmingeditor/features/trim" />
     <source-file src="src/android/src/features/trim/VideoTrimmerUtil.java" target-dir="src/plugin/videotrimmingeditor/features/trim" />
-    <!-- src/interfaces -->
     <source-file src="src/android/src/interfaces/IVideoTrimmerView.java" target-dir="src/plugin/videotrimmingeditor/interfaces" />
     <source-file src="src/android/src/interfaces/VideoCompressListener.java" target-dir="src/plugin/videotrimmingeditor/interfaces" />
     <source-file src="src/android/src/interfaces/VideoTrimListener.java" target-dir="src/plugin/videotrimmingeditor/interfaces" />
-    <!-- src/widget -->
     <source-file src="src/android/src/widget/RangeSeekBarView.java" target-dir="src/plugin/videotrimmingeditor/widget" />
     <source-file src="src/android/src/widget/SpacesItemDecoration2.java" target-dir="src/plugin/videotrimmingeditor/widget" />
     <source-file src="src/android/src/widget/VideoTrimmerView.java" target-dir="src/plugin/videotrimmingeditor/widget" />
     <source-file src="src/android/src/widget/ZVideoView.java" target-dir="src/plugin/videotrimmingeditor/widget" />
-    <!-- src/utils -->
     <source-file src="src/android/src/utils/StorageUtil.java" target-dir="src/plugin/videotrimmingeditor/utils" />
     <source-file src="src/android/src/utils/ToastUtil.java" target-dir="src/plugin/videotrimmingeditor/utils" />
     <source-file src="src/android/src/utils/UIThreadUtil.java" target-dir="src/plugin/videotrimmingeditor/utils" />
-    
-    <!-- res/layout -->
     <source-file src="src/android/res/layout/activity_main.xml" target-dir="res/layout"/>
     <source-file src="src/android/res/layout/activity_video_trim.xml" target-dir="res/layout"/>
     <source-file src="src/android/res/layout/video_thumb_item_layout.xml" target-dir="res/layout"/>
     <source-file src="src/android/res/layout/video_trimmer_view.xml" target-dir="res/layout"/>
-    <!-- res/drawable -->
     <source-file src="src/android/res/drawable/ic_video_pause_black.png" target-dir="res/drawable"/>
     <source-file src="src/android/res/drawable/ic_video_play_black.png" target-dir="res/drawable"/>
     <source-file src="src/android/res/drawable/ic_video_thumb_handle.png" target-dir="res/drawable"/>
     <source-file src="src/android/res/drawable/icon_seek_bar.png" target-dir="res/drawable"/>
-    <!-- res/values -->
     <source-file src="src/android/res/values/attrs.xml" target-dir="res/values"/>
     <source-file src="src/android/res/values/colors.xml" target-dir="res/values"/>
     <source-file src="src/android/res/values/dimens.xml" target-dir="res/values"/>
     <source-file src="src/android/res/values/ids.xml" target-dir="res/values"/>
     <source-file src="src/android/res/values/styles.xml" target-dir="res/values"/>
+
     <config-file target="res/values/strings.xml" parent="/resources">
       <string name="trimmed_done">video trim completed！</string>
       <string name="trimming">trimming video...</string>
