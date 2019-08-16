@@ -29,15 +29,15 @@ public class VideoTrimmingEditor extends CordovaPlugin {
             this.cordova.getActivity().startActivity(intent);
             */
 
-            /*
             Context context = cordova.getActivity().getApplicationContext();
             Intent intent = new Intent(context, VideoSelectActivity.class);
             this.cordova.getActivity().startActivity(intent);
-            */
 
+            /*
             Context context = cordova.getActivity().getApplicationContext();
-            Intent intent = new Intent(context, DummyActivity.class);
+            Intent intent = new Intent(context, VideoTrimmerActivity.class);
             this.cordova.getActivity().startActivity(intent);
+            */
 
             return true;
         } else {

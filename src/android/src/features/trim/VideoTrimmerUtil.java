@@ -5,9 +5,12 @@ import android.graphics.Bitmap;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.text.TextUtils;
+import android.util.Log;
 
 import plugin.videotrimmingeditor.interfaces.VideoTrimListener;
 
+import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -16,8 +19,9 @@ import iknow.android.utils.DeviceUtil;
 import iknow.android.utils.UnitConverter;
 import iknow.android.utils.callback.SingleCallback;
 import iknow.android.utils.thread.BackgroundExecutor;
-import nl.bravobit.ffmpeg.ExecuteBinaryResponseHandler;
-import nl.bravobit.ffmpeg.FFmpeg;
+import plugin.videotrimmingeditor.utils.VideoUtils;
+//import nl.bravobit.ffmpeg.ExecuteBinaryResponseHandler;
+//import nl.bravobit.ffmpeg.FFmpeg;
 
 /**
  * Author：J.Chou
@@ -49,40 +53,16 @@ public class VideoTrimmerUtil {
     //String start = String.valueOf(startMs);
     //String duration = String.valueOf(endMs - startMs);
 
-    /** 裁剪视频ffmpeg指令说明：
-     * ffmpeg -ss START -t DURATION -i INPUT -codec copy -avoid_negative_ts 1 OUTPUT
-     -ss 开始时间，如： 00:00:20，表示从20秒开始；
-     -t 时长，如： 00:00:10，表示截取10秒长的视频；
-     -i 输入，后面是空格，紧跟着就是输入视频文件；
-     -codec copy -avoid_negative_ts 1 表示所要使用的视频和音频的编码格式，这里指定为copy表示原样拷贝；
-     INPUT，输入视频文件；
-     OUTPUT，输出视频文件
-     */
-    //TODO: Here are some instructions
-    //https://trac.ffmpeg.org/wiki/Seeking
-    //https://superuser.com/questions/138331/using-ffmpeg-to-cut-up-video
-
-    String cmd = "-ss " + start + " -t " + duration + " -accurate_seek" + " -i " + inputFile + " -codec copy -avoid_negative_ts 1 " + outputFile;
-    //String cmd = "-ss " + start + " -i " + inputFile + " -ss " + start + " -t " + duration + " -vcodec copy " + outputFile;
-    //{"ffmpeg", "-ss", "" + startTime, "-y", "-i", inputFile, "-t", "" + induration, "-vcodec", "mpeg4", "-b:v", "2097152", "-b:a", "48000", "-ac", "2", "-ar", "22050", outputFile}
-    //String cmd = "-ss " + start + " -y " + "-i " + inputFile + " -t " + duration + " -vcodec " + "mpeg4 " + "-b:v " + "2097152 " + "-b:a " + "48000 " + "-ac " + "2 " + "-ar " + "22050 "+ outputFile;
-    String[] command = cmd.split(" ");
     try {
-      final String tempOutFile = outputFile;
-      FFmpeg.getInstance(context).execute(command, new ExecuteBinaryResponseHandler() {
+      File input = new File(inputFile);
+      File output = new File(outputFile);
 
-        @Override
-        public void onSuccess(String s) {
-          callback.onFinishTrim(tempOutFile);
-        }
+      callback.onStartTrim();
+      VideoUtils.startTrim(input, output, (int)startMs, (int) endMs);
+      callback.onFinishTrim(outputFile);
 
-        @Override
-        public void onStart() {
-          callback.onStartTrim();
-        }
-      });
-    } catch (Exception e) {
-      e.printStackTrace();
+    } catch (IOException e) {
+      callback.onCancel();
     }
   }
 

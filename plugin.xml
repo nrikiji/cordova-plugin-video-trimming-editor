@@ -31,16 +31,17 @@
         <param name="android-package" value="plugin.videotrimmingeditor.VideoTrimmingEditor"/>
       </feature>
     </config-file>
+    <config-file target="AndroidManifest.xml" parent="/manifest">
+      <uses-permission android:name="android.permission.RECORD_AUDIO" />
+      <uses-permission android:name="android.permission.RECORD_VIDEO" />
+      <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+      <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    </config-file>
     <config-file target="AndroidManifest.xml" parent="/manifest/application">
-      <activity android:name="plugin.videotrimmingeditor.features.select.VideoSelectActivity"
-                android:theme="@style/AppTheme"
-                android:screenOrientation="portrait"/>
-      <activity android:name="plugin.videotrimmingeditor.features.trim.VideoTrimmerActivity"
-                android:theme="@style/AppTheme"
-                android:screenOrientation="portrait"/>
-      <activity android:name="plugin.videotrimmingeditor.features.record.VideoRecordActivity"
-                android:theme="@style/AppTheme"
-                android:screenOrientation="portrait"/>
+      <activity android:name="plugin.videotrimmingeditor.VideoTrimmingEditorActivity" android:theme="@style/AppTheme" android:screenOrientation="portrait"/>
+      <activity android:name="plugin.videotrimmingeditor.features.select.VideoSelectActivity" android:theme="@style/AppTheme" android:screenOrientation="portrait"/>
+      <activity android:name="plugin.videotrimmingeditor.features.trim.VideoTrimmerActivity" android:theme="@style/AppTheme" android:screenOrientation="portrait"/>
+      <activity android:name="plugin.videotrimmingeditor.features.record.VideoRecordActivity" android:theme="@style/AppTheme" android:screenOrientation="portrait"/>
     </config-file>
 
     <hook type="after_prepare" src="src/scripts/android_after_prepare.js" />

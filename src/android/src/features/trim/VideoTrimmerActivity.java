@@ -89,25 +89,25 @@ public class VideoTrimmerActivity extends BaseActivity implements VideoTrimListe
     // ToastUtil.longShow(this, getString(R.string.trimmed_done));
     ToastUtil.longShow(this, getString(getResources().getIdentifier("trimmed_done", "string", getPackageName())));
 
-    // finish();
+    finish();
     //TODO: please handle your trimmed video url here!!!
-    String out = StorageUtil.getCacheDir() + File.separator + COMPRESSED_VIDEO_FILE_NAME;
+//    String out = StorageUtil.getCacheDir() + File.separator + COMPRESSED_VIDEO_FILE_NAME;
     // buildDialog(getResources().getString(R.string.compressing)).show();
-    buildDialog(getResources().getString(getResources().getIdentifier("compressing", "string", getPackageName()))).show();
-    VideoCompressor.compress(this, in, out, new VideoCompressListener() {
-      @Override public void onSuccess(String message) {
-        Log.d("","success");
-      }
-
-      @Override public void onFailure(String message) {
-        Log.d("","failed");
-      }
-
-      @Override public void onFinish() {
-        if (mProgressDialog.isShowing()) mProgressDialog.dismiss();
-        finish();
-      }
-    });
+//    buildDialog(getResources().getString(getResources().getIdentifier("compressing", "string", getPackageName()))).show();
+//    VideoCompressor.compress(this, in, out, new VideoCompressListener() {
+//      @Override public void onSuccess(String message) {
+//        Log.d("","success");
+//      }
+//
+//      @Override public void onFailure(String message) {
+//        Log.d("","failed");
+//      }
+//
+//      @Override public void onFinish() {
+//        if (mProgressDialog.isShowing()) mProgressDialog.dismiss();
+//        finish();
+//      }
+//    });
   }
 
   @Override

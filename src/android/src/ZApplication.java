@@ -5,7 +5,7 @@ import android.content.Context;
 import android.util.Log;
 
 import iknow.android.utils.BaseUtils;
-import nl.bravobit.ffmpeg.FFmpeg;
+//import nl.bravobit.ffmpeg.FFmpeg;
 
 /**
  * Author：J.Chou
@@ -23,8 +23,8 @@ public class ZApplication extends Application {
   }
 
   private void initFFmpegBinary(Context context) {
-    if (!FFmpeg.getInstance(context).isSupported()) {
-      Log.e("ZApplication","Android cup arch not supported!");
-    }
+//    if (!FFmpeg.getInstance(context).isSupported()) {
+//      Log.e("ZApplication","Android cup arch not supported!");
+//    }
   }
 }
