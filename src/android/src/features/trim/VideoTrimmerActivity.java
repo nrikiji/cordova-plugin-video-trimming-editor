@@ -11,7 +11,7 @@ import android.util.Log;
 
 import java.io.File;
 
-import nrikiji.videotrimmingeditorsample.databinding.ActivityVideoTrimBinding;
+import #{APPLICATION_ID}.databinding.ActivityVideoTrimBinding;
 import plugin.videotrimmingeditor.features.common.ui.BaseActivity;
 import plugin.videotrimmingeditor.features.compress.VideoCompressor;
 import plugin.videotrimmingeditor.interfaces.VideoCompressListener;

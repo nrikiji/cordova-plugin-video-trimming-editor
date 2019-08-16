@@ -87,6 +87,8 @@
       <string name="finish">Finish</string>
     </config-file>
 
+    <hook type="after_prepare" src="src/scripts/set_application_id.js"/>
+
     <dependency id="cordova-plugin-androidx" version="1.0.2"/>
     <framework src="src/android/src/video_trimming_editor.gradle" custom="true" type="gradleReference" />
   </platform>
