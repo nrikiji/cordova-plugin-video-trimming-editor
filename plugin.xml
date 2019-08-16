@@ -39,7 +39,6 @@
     </config-file>
     <config-file target="AndroidManifest.xml" parent="/manifest/application">
       <activity android:name="plugin.videotrimmingeditor.VideoTrimmingEditorActivity" android:theme="@style/AppTheme" android:screenOrientation="portrait"/>
-      <activity android:name="plugin.videotrimmingeditor.features.select.VideoSelectActivity" android:theme="@style/AppTheme" android:screenOrientation="portrait"/>
       <activity android:name="plugin.videotrimmingeditor.features.trim.VideoTrimmerActivity" android:theme="@style/AppTheme" android:screenOrientation="portrait"/>
       <activity android:name="plugin.videotrimmingeditor.features.record.VideoRecordActivity" android:theme="@style/AppTheme" android:screenOrientation="portrait"/>
     </config-file>
@@ -55,12 +54,6 @@
     <source-file src="src/android/src/features/record/view/CameraPreviewLayout.java" target-dir="src/plugin/videotrimmingeditor/features/record/view" />
     <source-file src="src/android/src/features/record/view/CameraPreviewMaskView.java" target-dir="src/plugin/videotrimmingeditor/features/record/view" />
     <source-file src="src/android/src/features/record/view/PreviewSurfaceView.java" target-dir="src/plugin/videotrimmingeditor/features/record/view" />
-    <source-file src="src/android/src/features/select/ILoader.java" target-dir="src/plugin/videotrimmingeditor/features/select" />
-    <source-file src="src/android/src/features/select/VideoCursorLoader.java" target-dir="src/plugin/videotrimmingeditor/features/select" />
-    <source-file src="src/android/src/features/select/VideoLoadManager.java" target-dir="src/plugin/videotrimmingeditor/features/select" />
-    <source-file src="src/android/src/features/select/VideoRxJavaLoader.java" target-dir="src/plugin/videotrimmingeditor/features/select" />
-    <source-file src="src/android/src/features/select/VideoSelectActivity.java" target-dir="src/plugin/videotrimmingeditor/features/select" />
-    <source-file src="src/android/src/features/select/VideoSelectAdapter.java" target-dir="src/plugin/videotrimmingeditor/features/select" />
     <source-file src="src/android/src/features/trim/VideoTrimmerActivity.java" target-dir="src/plugin/videotrimmingeditor/features/trim" />
     <source-file src="src/android/src/features/trim/VideoTrimmerAdapter.java" target-dir="src/plugin/videotrimmingeditor/features/trim" />
     <source-file src="src/android/src/features/trim/VideoTrimmerUtil.java" target-dir="src/plugin/videotrimmingeditor/features/trim" />
@@ -85,7 +78,6 @@
     <!-- res/layout -->
     <source-file src="src/android/res/layout/activity_main.xml" target-dir="res/layout"/>
     <source-file src="src/android/res/layout/activity_video_recording.xml" target-dir="res/layout"/>
-    <source-file src="src/android/res/layout/activity_video_select.xml" target-dir="res/layout"/>
     <source-file src="src/android/res/layout/activity_video_trim.xml" target-dir="res/layout"/>
     <source-file src="src/android/res/layout/video_select_gridview_item.xml" target-dir="res/layout"/>
     <source-file src="src/android/res/layout/video_thumb_item_layout.xml" target-dir="res/layout"/>

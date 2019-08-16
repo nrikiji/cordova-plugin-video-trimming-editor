@@ -14,7 +14,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import iknow.android.utils.BaseUtils;
-import plugin.videotrimmingeditor.features.select.VideoSelectActivity;
 import plugin.videotrimmingeditor.features.trim.VideoTrimmerActivity;
 
 public class VideoTrimmingEditor extends CordovaPlugin {
