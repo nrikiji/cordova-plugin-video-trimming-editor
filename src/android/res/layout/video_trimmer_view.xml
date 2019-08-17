@@ -32,23 +32,11 @@
       android:background="@android:color/black"
       >
 
-    <TextView
-        android:id="@+id/video_shoot_tip"
-        android:layout_width="match_parent"
-        android:layout_height="30dp"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:gravity="center"
-        android:textColor="@android:color/white"
-        android:textSize="12dp"
-        tools:text="拖动选择你要发表的10秒以内片段"
-        />
     <FrameLayout
         android:id="@+id/video_frames_layout"
         android:layout_width="match_parent"
         android:layout_height="150dp"
-        android:layout_below="@+id/video_shoot_tip"
+        android:layout_alignParentTop="true"
         >
 
       <androidx.recyclerview.widget.RecyclerView
@@ -141,7 +129,7 @@
           android:gravity="center"
           android:padding="10dp"
           android:text="@string/finish"
-          android:textColor="@android:color/holo_green_dark"
+          android:textColor="@android:color/white"
           android:textSize="16dp"
           />
 
