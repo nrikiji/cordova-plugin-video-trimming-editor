@@ -24,6 +24,7 @@
     <dependency id="cordova-plugin-carthage-support" />
 
     <source-file src="src/ios/VideoTrimmingEditor.swift" />
+    <source-file src="src/ios/VideoTrimmingEditorViewController.swift" />
 
     <carthage>
       <cartfile>github "HHK1/PryntTrimmerView"</cartfile>

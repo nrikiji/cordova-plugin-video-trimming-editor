@@ -125,7 +125,7 @@ class VideoTrimmingEditorViewController: UIViewController {
         trimmerView.seek(to: playBackTime)
         
         if playBackTime >= endTime {
-            player.seek(to: startTime, toleranceBefore: CMTime.zero, toleranceAfter: CMTime.zero)
+            player.seek(to: startTime, toleranceBefore: kCMTimeZero, toleranceAfter: kCMTimeZero)
             trimmerView.seek(to: startTime)
         }
     }
@@ -134,7 +134,7 @@ class VideoTrimmingEditorViewController: UIViewController {
 extension VideoTrimmingEditorViewController: TrimmerViewDelegate {
     
     func positionBarStoppedMoving(_ playerTime: CMTime) {
-        player?.seek(to: playerTime, toleranceBefore: CMTime.zero, toleranceAfter: CMTime.zero)
+        player?.seek(to: playerTime, toleranceBefore: kCMTimeZero, toleranceAfter: kCMTimeZero)
         player?.play()
         startPlaybackTimeChecker()
     }
@@ -142,7 +142,7 @@ extension VideoTrimmingEditorViewController: TrimmerViewDelegate {
     func didChangePositionBar(_ playerTime: CMTime) {
         stopPlaybackTimeChecker()
         player?.pause()
-        player?.seek(to: playerTime, toleranceBefore: CMTime.zero, toleranceAfter: CMTime.zero)
+        player?.seek(to: playerTime, toleranceBefore: kCMTimeZero, toleranceAfter: kCMTimeZero)
         
         let formatter = DateComponentsFormatter()
         formatter.unitsStyle = .positional
