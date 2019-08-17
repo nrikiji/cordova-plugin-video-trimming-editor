@@ -25,6 +25,8 @@
 
     <source-file src="src/ios/VideoTrimmingEditor.swift" />
     <source-file src="src/ios/VideoTrimmingEditorViewController.swift" />
+    <resource-file src="src/ios/ic_video_play_black.png" />
+    <resource-file src="src/ios/ic_video_pause_black.png" />
 
     <carthage>
       <cartfile>github "HHK1/PryntTrimmerView"</cartfile>

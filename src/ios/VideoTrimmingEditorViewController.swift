@@ -13,6 +13,8 @@ class VideoTrimmingEditorViewController: UIViewController {
     var trimmerView = TrimmerView()
     var duration = UILabel()
     var cancelBtn = UIButton()
+    var playBtn = UIImageView()
+    var pauseBtn = UIImageView()
     var trimmingBtn = UIButton()
     var inputPath: String!
     
@@ -22,15 +24,15 @@ class VideoTrimmingEditorViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.view.backgroundColor = UIColor.black
-        
+        self.view.backgroundColor = UIColor.white
+
         self.loadAsset()
         
         playerView.backgroundColor = UIColor.lightGray
         playerView.frame = CGRect(x: margin, y: 50, width: view.frame.width - margin*2, height: view.frame.height - 240)
         view.addSubview(playerView)
         
-        duration.textColor = UIColor.white
+        duration.textColor = UIColor.black
         duration.font = UIFont.systemFont(ofSize: 16)
         duration.textAlignment = NSTextAlignment.center
         duration.frame = CGRect(x: 0, y: view.frame.height - 180, width: view.frame.width, height: 20)
@@ -47,14 +49,31 @@ class VideoTrimmingEditorViewController: UIViewController {
         // let systemBlueColor = UIColor(red: 0, green: 122 / 255, blue: 1, alpha: 1)
         
         cancelBtn.setTitle("Cancel", for: UIControl.State.normal)
-        cancelBtn.setTitleColor(UIColor.white, for: UIControl.State.normal)
+        cancelBtn.setTitleColor(UIColor.black, for: UIControl.State.normal)
         cancelBtn.frame = CGRect(x: 20, y: view.frame.height - 30, width: 120, height: 20)
         cancelBtn.contentHorizontalAlignment = UIControl.ContentHorizontalAlignment.left
         cancelBtn.addTarget(self, action: #selector(onCancel(sender:)), for: .touchUpInside)
         view.addSubview(cancelBtn)
         
+        playBtn.image = UIImage(named: "ic_video_play_black.png")?.withRenderingMode(.alwaysTemplate)
+        playBtn.contentMode = UIView.ContentMode.scaleAspectFit
+        playBtn.frame = CGRect(x: view.frame.width/2 - 10, y: view.frame.height - 30, width: 20, height: 20)
+        playBtn.isUserInteractionEnabled = true
+        playBtn.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(self.onPlay(sender:))))
+        playBtn.tintColor = UIColor.black
+        view.addSubview(playBtn)
+
+        pauseBtn.image = UIImage(named: "ic_video_pause_black.png")?.withRenderingMode(.alwaysTemplate)
+        pauseBtn.contentMode = UIView.ContentMode.scaleAspectFit
+        pauseBtn.frame = CGRect(x: view.frame.width/2 - 10, y: view.frame.height - 30, width: 20, height: 20)
+        pauseBtn.isUserInteractionEnabled = true
+        pauseBtn.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(self.onPause(sender:))))
+        pauseBtn.isHidden = true
+        pauseBtn.tintColor = UIColor.black
+        view.addSubview(pauseBtn)
+
         trimmingBtn.setTitle("Finish", for: UIControl.State.normal)
-        trimmingBtn.setTitleColor(UIColor.white, for: UIControl.State.normal)
+        trimmingBtn.setTitleColor(UIColor.black, for: UIControl.State.normal)
         trimmingBtn.frame = CGRect(x: view.frame.width - 140, y: view.frame.height - 30, width: 120, height: 20)
         trimmingBtn.addTarget(self, action: #selector(onTrimming(sender:)), for: .touchUpInside)
         trimmingBtn.contentHorizontalAlignment = UIControl.ContentHorizontalAlignment.right
@@ -129,13 +148,24 @@ class VideoTrimmingEditorViewController: UIViewController {
             trimmerView.seek(to: startTime)
         }
     }
+    
+    @objc func onPlay(sender: UITapGestureRecognizer) {
+        player?.play()
+        playBtn.isHidden = true
+        pauseBtn.isHidden = false
+    }
+    
+    @objc func onPause(sender: UITapGestureRecognizer) {
+        player?.pause()
+        playBtn.isHidden = false
+        pauseBtn.isHidden = true
+    }
 }
 
 extension VideoTrimmingEditorViewController: TrimmerViewDelegate {
     
     func positionBarStoppedMoving(_ playerTime: CMTime) {
         player?.seek(to: playerTime, toleranceBefore: kCMTimeZero, toleranceAfter: kCMTimeZero)
-        player?.play()
         startPlaybackTimeChecker()
     }
     
@@ -143,7 +173,9 @@ extension VideoTrimmingEditorViewController: TrimmerViewDelegate {
         stopPlaybackTimeChecker()
         player?.pause()
         player?.seek(to: playerTime, toleranceBefore: kCMTimeZero, toleranceAfter: kCMTimeZero)
-        
+        playBtn.isHidden = false
+        pauseBtn.isHidden = true
+
         let formatter = DateComponentsFormatter()
         formatter.unitsStyle = .positional
         formatter.allowedUnits = [.minute, .second]
