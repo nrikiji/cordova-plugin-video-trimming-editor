@@ -21,7 +21,9 @@ class VideoTrimmingEditorViewController: UIViewController {
     var player: AVPlayer?
     
     var playbackTimeCheckerTimer: Timer?
-    
+    var successCallback: ((String) -> Void)?
+    var errorCallback: (() -> Void)?
+
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = UIColor.white
@@ -90,7 +92,58 @@ class VideoTrimmingEditorViewController: UIViewController {
     }
     
     @objc func onTrimming(sender: UIButton) {
+        let inputURL = URL(fileURLWithPath: inputPath)
+        let outputURL = URL(fileURLWithPath: outputPath())
+        
+        let videoAsset = AVURLAsset(url: inputURL)
+        let audioAsset = AVURLAsset(url: inputURL)
+        let composition = AVMutableComposition()
+        
+        let videoAssetSrcTrack = videoAsset.tracks(withMediaType: AVMediaType.video).first!
+        let videoCompositionTrack = composition.addMutableTrack(withMediaType: AVMediaType.video, preferredTrackID: kCMPersistentTrackID_Invalid)
+        let audioAssetSrcTrack = audioAsset.tracks(withMediaType: AVMediaType.audio).first!
+        let audioCompositionTrack = composition.addMutableTrack(withMediaType: AVMediaType.audio, preferredTrackID: kCMPersistentTrackID_Invalid)
+        
+        let rangeStart = CMTimeMakeWithSeconds(Float64(trimmerView.startTime!.seconds), Int32(NSEC_PER_SEC))
+        let rangeDulation = CMTimeMakeWithSeconds(Float64(trimmerView.endTime!.seconds - trimmerView.startTime!.seconds), Int32(NSEC_PER_SEC))
+        let outputRange: CMTimeRange = CMTimeRangeMake(rangeStart, rangeDulation)
+        
+        do {
+            videoCompositionTrack?.preferredTransform = (videoAsset.tracks(withMediaType: AVMediaType.video).first?.preferredTransform)!
+            try videoCompositionTrack?.insertTimeRange(outputRange, of: videoAssetSrcTrack, at: kCMTimeZero)
+            try audioCompositionTrack?.insertTimeRange(outputRange, of: audioAssetSrcTrack, at: kCMTimeZero)
+            
+            if let exportSession = AVAssetExportSession(asset: composition, presetName: AVAssetExportPresetHighestQuality) {
+                exportSession.canPerformMultiplePassesOverSourceMediaData = true
+                exportSession.outputURL = outputURL
+                exportSession.outputFileType = AVFileType.mp4
+                exportSession.timeRange = CMTimeRangeMake(kCMTimeZero, composition.duration)
+                exportSession.outputFileType = AVFileType.mov as AVFileType
+                
+                exportSession.exportAsynchronously {
+                    if exportSession.status.rawValue == 3 {
+                        self.successCallback?(self.outputPath())
+                    } else {
+                        self.errorCallback?()
+                    }
+                }
+            } else {
+                self.errorCallback?()
+            }
+        } catch {
+            self.errorCallback?()
+        }
         self.dismiss(animated: true, completion: nil)
+    }
+    
+    private func outputPath() -> String {
+        let timeInterval = NSDate().timeIntervalSince1970
+        let myTimeInterval = TimeInterval(timeInterval)
+        let time = NSDate(timeIntervalSince1970: TimeInterval(myTimeInterval))
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyyMMddHHmmss"
+        let timestamp = formatter.string(from: time as Date)
+        return NSTemporaryDirectory() + "vte_\(timestamp).mp4"
     }
 
     private func loadAsset() {
