@@ -4,6 +4,8 @@ import Photos
 import PryntTrimmerView
 
 class VideoTrimmingEditorViewController: UIViewController {
+    
+    var maxDuration: Double = 30
 
     let margin: CGFloat = 20.0
     
@@ -12,7 +14,6 @@ class VideoTrimmingEditorViewController: UIViewController {
     var duration = UILabel()
     var cancelBtn = UIButton()
     var trimmingBtn = UIButton()
-    // var durationVideo = UILabel()
     var inputPath: String!
     
     var player: AVPlayer?
@@ -29,7 +30,6 @@ class VideoTrimmingEditorViewController: UIViewController {
         playerView.frame = CGRect(x: margin, y: 50, width: view.frame.width - margin*2, height: view.frame.height - 240)
         view.addSubview(playerView)
         
-        duration.text = "00.00 〜 10.20"
         duration.textColor = UIColor.white
         duration.font = UIFont.systemFont(ofSize: 16)
         duration.textAlignment = NSTextAlignment.center
@@ -39,7 +39,7 @@ class VideoTrimmingEditorViewController: UIViewController {
         trimmerView.handleColor = UIColor.white
         trimmerView.mainColor = UIColor.darkGray
         trimmerView.positionBarColor = UIColor.red
-        trimmerView.maxDuration = 30
+        trimmerView.maxDuration = maxDuration
         trimmerView.frame = CGRect(x: margin, y: view.frame.height - 150, width: view.frame.width - margin*2, height: 100)
         trimmerView.delegate = self
         view.addSubview(trimmerView)
@@ -80,9 +80,16 @@ class VideoTrimmingEditorViewController: UIViewController {
             let inputURL = URL(fileURLWithPath: self.inputPath)
             let avAsset = AVURLAsset(url: inputURL, options: nil)
             
-            let duration = avAsset.duration
-            let durationTime = Int(CMTimeGetSeconds(duration))
-            //self.durationVideo.text = "\(durationTime)s"
+            let formatter = DateComponentsFormatter()
+            formatter.unitsStyle = .positional
+            formatter.allowedUnits = [.minute, .second]
+            formatter.zeroFormattingBehavior = [.pad]
+            
+            var endTime = self.maxDuration
+            if avAsset.duration.seconds < self.maxDuration {
+                endTime = avAsset.duration.seconds
+            }
+            self.duration.text = "0.00 〜 \(formatter.string(from: endTime)!)"
             
             self.trimmerView.asset = avAsset
             let playerItem = AVPlayerItem(asset: avAsset)
@@ -139,12 +146,10 @@ extension VideoTrimmingEditorViewController: TrimmerViewDelegate {
         
         let formatter = DateComponentsFormatter()
         formatter.unitsStyle = .positional
-        formatter.allowedUnits = [.minute,.hour,.second]
-        let startTimeStr = formatter.string(from: trimmerView.startTime!.seconds)
-        let endTimeStr = formatter.string(from: trimmerView.endTime!.seconds)
-        //duration.text = "\(startTimeStr) 〜 \(endTimeStr)"
-        // let duration = (trimmerView.endTime! - trimmerView.startTime!).seconds
-        // print(duration)
-        print("\(trimmerView.startTime!.seconds) - \(trimmerView.endTime!.seconds)")
+        formatter.allowedUnits = [.minute, .second]
+        formatter.zeroFormattingBehavior = [.pad]
+        let startTime = formatter.string(from: trimmerView.startTime!.seconds)!
+        let endTime = formatter.string(from: trimmerView.endTime!.seconds)!
+        duration.text = "\(startTime) 〜 \(endTime)"
     }
 }
