@@ -12,13 +12,16 @@ import PryntTrimmerView
             self.commandDelegate.send(result, callbackId:command.callbackId)
             return
         }
+        
+        guard let videoMaxTime = params["video_max_time"] as? Int else {
+            let result = CDVPluginResult(status: CDVCommandStatus_ERROR, messageAs: "Parameter Error")
+            self.commandDelegate.send(result, callbackId:command.callbackId)
+            return
+        }
 
         let viewController = VideoTrimmingEditorViewController()
         viewController.inputPath = inputPath
+        viewController.maxDuration = Double(videoMaxTime)
         self.viewController.present(viewController, animated: true, completion: nil)
-
-//        let inputURL = URL(fileURLWithPath: inputPath)
-//        let avAsset = AVURLAsset(url: inputURL, options: nil)
-//        print(avAsset)
     }
 }
