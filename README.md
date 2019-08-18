@@ -7,6 +7,10 @@ https://github.com/HHK1/PryntTrimmerView
 
 また、Android-Video-Trimmerで使用されているffmpegの部分のコードについてはライセンスに対する懸念から削除して使用せずに実現しました。  
 
+※iOSとAndroidの画面イメージ  
+![ios](https://user-images.githubusercontent.com/4780752/63224897-d8d56700-c205-11e9-8756-0d17b3ca4b3e.png)
+![android](https://user-images.githubusercontent.com/4780752/63224898-d96dfd80-c205-11e9-808c-2d6e0e2decbc.png)
+
 ## Requirement
 cordova >= 7.1.0  
 cordova-ios >= 4.5.0  
@@ -43,8 +47,9 @@ VideoTrimmingEditor.open(
 ```
 
 ## Features
-今後追加したい機能としては以下の予定です。  
-・画面テーマまたは各要素のカラーを利用者側で設定できるようにする。  
-・各要素のボタンテキストを固定値としているので利用者側で設定できるようにする。  
-・トリミング後のファイルに対して圧縮する機能を追加する。  
+今後追加したい機能としては以下の予定です  
+・画面テーマまたは各要素のカラーを利用者側で設定できるようにする  
+・各要素のボタンテキストを固定値としているので利用者側で設定できるようにする  
+・トリミング後のファイルに対して圧縮する機能を追加する
+・iPhoneX系でのレイアウト調整  
 
