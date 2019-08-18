@@ -7,7 +7,7 @@ https://github.com/HHK1/PryntTrimmerView
 
 In addition, the code of the ffmpeg part used in Android-Video-Trimmer has been deleted without being used due to concerns about licensing.  
 
-* Screen image of iOS and Android
+* Screen image of iOS and Android  
 ![ios](https://user-images.githubusercontent.com/4780752/63224897-d8d56700-c205-11e9-8756-0d17b3ca4b3e.png)
 ![android](https://user-images.githubusercontent.com/4780752/63224898-d96dfd80-c205-11e9-808c-2d6e0e2decbc.png)
 
