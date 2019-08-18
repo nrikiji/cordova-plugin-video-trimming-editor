@@ -30,9 +30,6 @@ cordova plugin add cordova-plugin-video-trimming-editor
 使用例  
 ```js
 
-var params = {
-};
-
 VideoTrimmingEditor.open(
   {
     input_path: '/path/to/xxx.mp4',
