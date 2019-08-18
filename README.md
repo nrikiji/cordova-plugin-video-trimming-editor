@@ -16,6 +16,12 @@ cordova >= 7.1.0
 cordova-ios >= 4.5.0  
 cordova-android >= 8.0.0  
 
+https://github.com/dpa99c/cordova-plugin-androidx  
+https://github.com/nrikiji/cordova-plugin-carthage-support  
+https://github.com/akofman/cordova-plugin-add-swift-support  
+[Carthage(>= 0.3.3)](https://github.com/Carthage/Carthage)  
+
+
 ## Installation
 ```
 cordova plugin add cordova-plugin-video-trimming-editor
