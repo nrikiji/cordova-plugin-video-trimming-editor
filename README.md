@@ -5,7 +5,7 @@
 https://github.com/iknow4/Android-Video-Trimmer  
 https://github.com/HHK1/PryntTrimmerView  
 
-また、Android-Video-Trimmerで使用されているffmpegの部分のコードについてはライセンスに対する懸念から削除して使用せずに実現しました。  
+また、Android-Video-Trimmerで使用されているffmpegの部分のコードについてはライセンスに対する懸念から削除して使用しない形で実装しました。  
 
 ※iOSとAndroidの画面イメージ  
 ![ios](https://user-images.githubusercontent.com/4780752/63224897-d8d56700-c205-11e9-8756-0d17b3ca4b3e.png)
