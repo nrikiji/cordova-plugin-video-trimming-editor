@@ -2,6 +2,7 @@ package plugin.videotrimmingeditor;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 
@@ -13,12 +14,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
-// import nrikiji.trimsample.R;
-import nrikiji.videotrimmingeditorsample.databinding.ActivityVideoSelectBinding;
 import plugin.videotrimmingeditor.features.common.ui.BaseActivity;
-import plugin.videotrimmingeditor.features.record.VideoRecordActivity;
-import plugin.videotrimmingeditor.features.record.view.CameraPreviewLayout;
-import plugin.videotrimmingeditor.features.record.view.PreviewSurfaceView;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import iknow.android.utils.callback.SimpleCallback;
@@ -31,14 +27,27 @@ public class VideoTrimmingEditorActivity extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        String path = "/storage/emulated/0/CROOZBlog/34176116/EDIT/f4930454-bd6f-4499-816c-1d24ab0941bf.mp4";
-        VideoTrimmerActivity.call((FragmentActivity) VideoTrimmingEditorActivity.this, path);
+        Bundle bd = getIntent().getExtras();
+        String path = "";
+        if (bd != null) path = bd.getString(VideoTrimmerActivity.VIDEO_PATH_KEY);
+
+        VideoTrimmerActivity.call((FragmentActivity) this, path);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.d("","戻ってきたよー!!");
+
+        if (requestCode == VideoTrimmerActivity.VIDEO_TRIM_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                String videoPath = data.getStringExtra(VideoTrimmerActivity.VIDEO_OUTPUT_KEY);
+                Intent intent = new Intent();
+                intent.putExtra(VideoTrimmerActivity.VIDEO_OUTPUT_KEY, videoPath);
+                setResult(RESULT_OK, intent);
+            }
+        }
+
+        finish();
     }
 
     @Override
