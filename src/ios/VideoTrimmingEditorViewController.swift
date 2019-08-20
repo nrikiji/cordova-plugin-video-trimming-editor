@@ -21,8 +21,12 @@ class VideoTrimmingEditorViewController: UIViewController {
     var player: AVPlayer?
     
     var playbackTimeCheckerTimer: Timer?
-    var successCallback: ((String) -> Void)?
+    var startCallback: (() -> Void)?
+    var successCallback: (((String, String)) -> Void)?
     var errorCallback: (() -> Void)?
+    
+    var avAsset: AVURLAsset!
+    var inputURL: URL!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -92,8 +96,13 @@ class VideoTrimmingEditorViewController: UIViewController {
     }
     
     @objc func onTrimming(sender: UIButton) {
+        
+        // self.startIndicator()
+        self.startCallback?()
+
+        let output = outputPath()
         let inputURL = URL(fileURLWithPath: inputPath)
-        let outputURL = URL(fileURLWithPath: outputPath())
+        let outputURL = URL(fileURLWithPath: output)
         
         let videoAsset = AVURLAsset(url: inputURL)
         let audioAsset = AVURLAsset(url: inputURL)
@@ -113,6 +122,11 @@ class VideoTrimmingEditorViewController: UIViewController {
             try videoCompositionTrack?.insertTimeRange(outputRange, of: videoAssetSrcTrack, at: kCMTimeZero)
             try audioCompositionTrack?.insertTimeRange(outputRange, of: audioAssetSrcTrack, at: kCMTimeZero)
             
+            guard let capturePath = self.capture() else {
+                self.errorCallback?()
+                return
+            }
+            
             if let exportSession = AVAssetExportSession(asset: composition, presetName: AVAssetExportPresetHighestQuality) {
                 exportSession.canPerformMultiplePassesOverSourceMediaData = true
                 exportSession.outputURL = outputURL
@@ -122,7 +136,7 @@ class VideoTrimmingEditorViewController: UIViewController {
                 
                 exportSession.exportAsynchronously {
                     if exportSession.status.rawValue == 3 {
-                        self.successCallback?(self.outputPath())
+                        self.successCallback?((output, capturePath))
                     } else {
                         self.errorCallback?()
                     }
@@ -136,21 +150,62 @@ class VideoTrimmingEditorViewController: UIViewController {
         self.dismiss(animated: true, completion: nil)
     }
     
-    private func outputPath() -> String {
+    private func capture() -> String? {
+
+        let generator = AVAssetImageGenerator(asset: self.avAsset)
+        guard let assetTrack = self.avAsset.tracks(withMediaType: AVMediaType.video).first else {
+            return nil
+        }
+
+        let degree: CGFloat!
+        let transform = assetTrack.preferredTransform
+        if transform.a == -1.0 && transform.b == 0.0 && transform.c == 0.0 && transform.d == -1.0 {
+            degree = 180
+        } else if transform.a == 0.0 && transform.b == -1.0 && transform.c == 1.0 && transform.d == 0.0 {
+            degree = 270
+        }else if transform.a == 0.0 && transform.b == 1.0 && transform.c == -1.0 && transform.d == 0.0 {
+            degree = 90
+        } else {
+            degree = 0
+        }
+        
+        let floatTime = Float64(self.trimmerView.startTime!.seconds)
+        let time = CMTimeMakeWithSeconds(floatTime, 600)
+        guard let cgImage = try? generator.copyCGImage(at: time, actualTime: nil) else { return nil }
+        let capturePath = self.outputPath(type: 2)
+        guard let outputURL = URL(string: capturePath) else {
+            return nil
+        }
+        let image = UIImage(cgImage: cgImage).rotatedBy(degree: degree, isCropped: false)
+        
+        let pngImageData = UIImagePNGRepresentation(image)
+        do {
+            try pngImageData?.write(to: outputURL)
+            return capturePath
+        } catch {
+            return nil
+        }
+    }
+    
+    private func outputPath(type: Int = 1) -> String {
         let timeInterval = NSDate().timeIntervalSince1970
         let myTimeInterval = TimeInterval(timeInterval)
         let time = NSDate(timeIntervalSince1970: TimeInterval(myTimeInterval))
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyyMMddHHmmss"
         let timestamp = formatter.string(from: time as Date)
-        return NSTemporaryDirectory() + "vte_\(timestamp).mp4"
+        if type == 1 {
+            return NSTemporaryDirectory() + "vte_\(timestamp).mp4"
+        } else {
+            return "file://" + NSTemporaryDirectory() + "vte_\(timestamp).png"
+        }
     }
 
     private func loadAsset() {
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-            let inputURL = URL(fileURLWithPath: self.inputPath)
-            let avAsset = AVURLAsset(url: inputURL, options: nil)
+            self.inputURL = URL(fileURLWithPath: self.inputPath)
+            self.avAsset = AVURLAsset(url: self.inputURL, options: nil)
             
             let formatter = DateComponentsFormatter()
             formatter.unitsStyle = .positional
@@ -158,13 +213,13 @@ class VideoTrimmingEditorViewController: UIViewController {
             formatter.zeroFormattingBehavior = [.pad]
             
             var endTime = self.maxDuration
-            if avAsset.duration.seconds < self.maxDuration {
-                endTime = avAsset.duration.seconds
+            if self.avAsset.duration.seconds < self.maxDuration {
+                endTime = self.avAsset.duration.seconds
             }
             self.duration.text = "0.00 〜 \(formatter.string(from: endTime)!)"
             
-            self.trimmerView.asset = avAsset
-            let playerItem = AVPlayerItem(asset: avAsset)
+            self.trimmerView.asset = self.avAsset
+            let playerItem = AVPlayerItem(asset: self.avAsset)
             self.player = AVPlayer(playerItem: playerItem)
             
             NotificationCenter.default.addObserver(self, selector: #selector(VideoTrimmingEditorViewController.itemDidFinishPlaying(_:)), name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: playerItem)
