@@ -5,7 +5,14 @@ import PryntTrimmerView
 
 class VideoTrimmingEditorViewController: UIViewController {
     
-    var maxDuration: Double = 30
+    var maxDuration: Double
+    var inputPath: String! // 入力ファイルパス（内部的にはURLスキームありの前提で）
+    var outputBasePath: String! // 出力ファイルパス(拡張子なし)
+    var outputVideoPath: String! // 出力動画ファイルパス
+    var outputThumbnailPath: String! // 出力画像ファイルパス
+    var avAsset: AVURLAsset!
+
+    var requiredScheme: Bool = false // 戻り値にURLスキーマを追加するか（入力値と合わせる）
 
     let margin: CGFloat = 20.0
     
@@ -16,7 +23,6 @@ class VideoTrimmingEditorViewController: UIViewController {
     var playBtn = UIImageView()
     var pauseBtn = UIImageView()
     var trimmingBtn = UIButton()
-    var inputPath: String!
     
     var player: AVPlayer?
     
@@ -24,16 +30,29 @@ class VideoTrimmingEditorViewController: UIViewController {
     var startCallback: (() -> Void)?
     var successCallback: (((String, String)) -> Void)?
     var errorCallback: (() -> Void)?
-    
-    var avAsset: AVURLAsset!
-    var inputURL: URL!
 
+    init(_ inputPath: String, maxDuration: Int) {
+        self.inputPath = inputPath
+        self.maxDuration = Double(maxDuration)
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        setView()
+        initializeData()
+        loadAsset()
+    }
+    
+    private func setView() {
+        
         self.view.backgroundColor = UIColor.white
 
-        self.loadAsset()
-        
         playerView.backgroundColor = UIColor.lightGray
         playerView.frame = CGRect(x: margin, y: 50, width: view.frame.width - margin*2, height: view.frame.height - 240)
         view.addSubview(playerView)
@@ -68,7 +87,7 @@ class VideoTrimmingEditorViewController: UIViewController {
         playBtn.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(self.onPlay(sender:))))
         playBtn.tintColor = UIColor.black
         view.addSubview(playBtn)
-
+        
         pauseBtn.image = UIImage(named: "ic_video_pause_black.png")?.withRenderingMode(.alwaysTemplate)
         pauseBtn.contentMode = UIView.ContentMode.scaleAspectFit
         pauseBtn.frame = CGRect(x: view.frame.width/2 - 10, y: view.frame.height - 30, width: 20, height: 20)
@@ -77,7 +96,7 @@ class VideoTrimmingEditorViewController: UIViewController {
         pauseBtn.isHidden = true
         pauseBtn.tintColor = UIColor.black
         view.addSubview(pauseBtn)
-
+        
         trimmingBtn.setTitle("Finish", for: UIControl.State.normal)
         trimmingBtn.setTitleColor(UIColor.black, for: UIControl.State.normal)
         trimmingBtn.frame = CGRect(x: view.frame.width - 140, y: view.frame.height - 30, width: 120, height: 20)
@@ -86,127 +105,29 @@ class VideoTrimmingEditorViewController: UIViewController {
         view.addSubview(trimmingBtn)
     }
     
-    @objc func itemDidFinishPlaying(_ notification: Notification) {
-        guard let startTime = trimmerView.startTime else { return }
-        player?.seek(to: startTime)
-    }
-    
-    @objc func onCancel(sender: UIButton) {
-        self.dismiss(animated: true, completion: nil)
-    }
-    
-    @objc func onTrimming(sender: UIButton) {
-        
-        // self.startIndicator()
-        self.startCallback?()
-
-        let output = outputPath()
-        let inputURL = URL(fileURLWithPath: inputPath)
-        let outputURL = URL(fileURLWithPath: output)
-        
-        let videoAsset = AVURLAsset(url: inputURL)
-        let audioAsset = AVURLAsset(url: inputURL)
-        let composition = AVMutableComposition()
-        
-        let videoAssetSrcTrack = videoAsset.tracks(withMediaType: AVMediaType.video).first!
-        let videoCompositionTrack = composition.addMutableTrack(withMediaType: AVMediaType.video, preferredTrackID: kCMPersistentTrackID_Invalid)
-        let audioAssetSrcTrack = audioAsset.tracks(withMediaType: AVMediaType.audio).first!
-        let audioCompositionTrack = composition.addMutableTrack(withMediaType: AVMediaType.audio, preferredTrackID: kCMPersistentTrackID_Invalid)
-        
-        let rangeStart = CMTimeMakeWithSeconds(Float64(trimmerView.startTime!.seconds), Int32(NSEC_PER_SEC))
-        let rangeDulation = CMTimeMakeWithSeconds(Float64(trimmerView.endTime!.seconds - trimmerView.startTime!.seconds), Int32(NSEC_PER_SEC))
-        let outputRange: CMTimeRange = CMTimeRangeMake(rangeStart, rangeDulation)
-        
-        do {
-            videoCompositionTrack?.preferredTransform = (videoAsset.tracks(withMediaType: AVMediaType.video).first?.preferredTransform)!
-            try videoCompositionTrack?.insertTimeRange(outputRange, of: videoAssetSrcTrack, at: kCMTimeZero)
-            try audioCompositionTrack?.insertTimeRange(outputRange, of: audioAssetSrcTrack, at: kCMTimeZero)
-            
-            guard let capturePath = self.capture() else {
-                self.errorCallback?()
-                return
-            }
-            
-            if let exportSession = AVAssetExportSession(asset: composition, presetName: AVAssetExportPresetHighestQuality) {
-                exportSession.canPerformMultiplePassesOverSourceMediaData = true
-                exportSession.outputURL = outputURL
-                exportSession.outputFileType = AVFileType.mp4
-                exportSession.timeRange = CMTimeRangeMake(kCMTimeZero, composition.duration)
-                exportSession.outputFileType = AVFileType.mov as AVFileType
-                
-                exportSession.exportAsynchronously {
-                    if exportSession.status.rawValue == 3 {
-                        self.successCallback?((output, capturePath))
-                    } else {
-                        self.errorCallback?()
-                    }
-                }
-            } else {
-                self.errorCallback?()
-            }
-        } catch {
-            self.errorCallback?()
-        }
-        self.dismiss(animated: true, completion: nil)
-    }
-    
-    private func capture() -> String? {
-
-        let generator = AVAssetImageGenerator(asset: self.avAsset)
-        guard let assetTrack = self.avAsset.tracks(withMediaType: AVMediaType.video).first else {
-            return nil
-        }
-
-        let degree: CGFloat!
-        let transform = assetTrack.preferredTransform
-        if transform.a == -1.0 && transform.b == 0.0 && transform.c == 0.0 && transform.d == -1.0 {
-            degree = 180
-        } else if transform.a == 0.0 && transform.b == -1.0 && transform.c == 1.0 && transform.d == 0.0 {
-            degree = 270
-        }else if transform.a == 0.0 && transform.b == 1.0 && transform.c == -1.0 && transform.d == 0.0 {
-            degree = 90
+    private func initializeData() {
+        if inputPath.contains("file://") {
+            self.requiredScheme = true
         } else {
-            degree = 0
+            inputPath = "file://" + inputPath
         }
+        let inputURL = URL(string: inputPath)!
         
-        let floatTime = Float64(self.trimmerView.startTime!.seconds)
-        let time = CMTimeMakeWithSeconds(floatTime, 600)
-        guard let cgImage = try? generator.copyCGImage(at: time, actualTime: nil) else { return nil }
-        let capturePath = self.outputPath(type: 2)
-        guard let outputURL = URL(string: capturePath) else {
-            return nil
-        }
-        let image = UIImage(cgImage: cgImage).rotatedBy(degree: degree, isCropped: false)
-        
-        let pngImageData = UIImagePNGRepresentation(image)
-        do {
-            try pngImageData?.write(to: outputURL)
-            return capturePath
-        } catch {
-            return nil
-        }
-    }
-    
-    private func outputPath(type: Int = 1) -> String {
-        let timeInterval = NSDate().timeIntervalSince1970
-        let myTimeInterval = TimeInterval(timeInterval)
-        let time = NSDate(timeIntervalSince1970: TimeInterval(myTimeInterval))
+        let interval = TimeInterval(NSDate().timeIntervalSince1970)
+        let time = NSDate(timeIntervalSince1970: TimeInterval(interval))
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyyMMddHHmmss"
         let timestamp = formatter.string(from: time as Date)
-        if type == 1 {
-            return NSTemporaryDirectory() + "vte_\(timestamp).mp4"
-        } else {
-            return "file://" + NSTemporaryDirectory() + "vte_\(timestamp).png"
-        }
-    }
-
-    private func loadAsset() {
+        outputBasePath = "file://" + NSTemporaryDirectory() + "VideoTrimmingEditor_\(timestamp)"
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-            self.inputURL = URL(fileURLWithPath: self.inputPath)
-            self.avAsset = AVURLAsset(url: self.inputURL, options: nil)
-            
+        outputVideoPath = outputBasePath + ".mp4"
+        outputThumbnailPath = outputBasePath + ".png"
+        
+        self.avAsset = AVURLAsset(url: inputURL, options: nil)
+    }
+    
+    private func loadAsset() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
             let formatter = DateComponentsFormatter()
             formatter.unitsStyle = .positional
             formatter.allowedUnits = [.minute, .second]
@@ -231,7 +152,128 @@ class VideoTrimmingEditorViewController: UIViewController {
             self.playerView.layer.sublayers?.forEach({$0.removeFromSuperlayer()})
             self.playerView.layer.addSublayer(layer)
         }
+    }
+
+    @objc func itemDidFinishPlaying(_ notification: Notification) {
+        guard let startTime = trimmerView.startTime else { return }
+        player?.seek(to: startTime)
+    }
+    
+    @objc func onCancel(sender: UIButton) {
+        self.dismiss(animated: true, completion: nil)
+    }
+    
+    @objc func onTrimming(sender: UIButton) {
+        do {
+            // サムネイル生成
+            try createThumbnail()
+            
+            // 動画トリミング
+            trimmingVideo(success: { (arg) in
+                let (videoPath, thumbnailPath) = arg
+                self.successCallback?((videoPath, thumbnailPath))
+            }) {
+                self.errorCallback?()
+            }
+        } catch {
+            self.errorCallback?()
+        }
+    }
+    
+    private func createThumbnail() throws {
+        let generator = AVAssetImageGenerator(asset: avAsset)
+        guard let assetTrack = self.avAsset.tracks(withMediaType: AVMediaType.video).first else {
+            throw VideoTrimmingEditorError.createThumbnail
+        }
         
+        let floatTime = Float64(self.trimmerView.startTime!.seconds)
+        let time = CMTimeMakeWithSeconds(floatTime, 600)
+        guard let cgImage = try? generator.copyCGImage(at: time, actualTime: nil) else {
+            throw VideoTrimmingEditorError.createThumbnail
+        }
+        
+        guard let outputURL = URL(string: outputThumbnailPath!) else {
+            throw VideoTrimmingEditorError.createThumbnail
+        }
+        
+        let degree: CGFloat!
+        let transform = assetTrack.preferredTransform
+        if transform.a == -1.0 && transform.b == 0.0 && transform.c == 0.0 && transform.d == -1.0 {
+            degree = 180
+        } else if transform.a == 0.0 && transform.b == -1.0 && transform.c == 1.0 && transform.d == 0.0 {
+            degree = 270
+        }else if transform.a == 0.0 && transform.b == 1.0 && transform.c == -1.0 && transform.d == 0.0 {
+            degree = 90
+        } else {
+            degree = 0
+        }
+        
+        do {
+            let image = UIImage(cgImage: cgImage).rotatedBy(degree: degree, isCropped: false)
+            let pngImageData = UIImagePNGRepresentation(image)
+            try pngImageData?.write(to: outputURL)
+        } catch {
+            throw VideoTrimmingEditorError.createThumbnail
+        }
+    }
+
+    // 非同期処理のためコールバックを引数にもつ
+    private func trimmingVideo(success: @escaping ((String, String)) -> Void, failer: @escaping () -> Void) {
+        self.startCallback?()
+        
+        let inputURL = URL(string: inputPath)!
+        let outputURL = URL(string: outputVideoPath)!
+        
+        let videoAsset = AVURLAsset(url: inputURL)
+        let audioAsset = AVURLAsset(url: inputURL)
+        let composition = AVMutableComposition()
+        
+        let videoAssetSrcTrack = videoAsset.tracks(withMediaType: AVMediaType.video).first!
+        let videoCompositionTrack = composition.addMutableTrack(withMediaType: AVMediaType.video, preferredTrackID: kCMPersistentTrackID_Invalid)
+        let audioAssetSrcTrack = audioAsset.tracks(withMediaType: AVMediaType.audio).first!
+        let audioCompositionTrack = composition.addMutableTrack(withMediaType: AVMediaType.audio, preferredTrackID: kCMPersistentTrackID_Invalid)
+        
+        let rangeStart = CMTimeMakeWithSeconds(Float64(trimmerView.startTime!.seconds), Int32(NSEC_PER_SEC))
+        let rangeDulation = CMTimeMakeWithSeconds(Float64(trimmerView.endTime!.seconds - trimmerView.startTime!.seconds), Int32(NSEC_PER_SEC))
+        let outputRange: CMTimeRange = CMTimeRangeMake(rangeStart, rangeDulation)
+        
+        do {
+            videoCompositionTrack?.preferredTransform = (videoAsset.tracks(withMediaType: AVMediaType.video).first?.preferredTransform)!
+            try videoCompositionTrack?.insertTimeRange(outputRange, of: videoAssetSrcTrack, at: kCMTimeZero)
+            try audioCompositionTrack?.insertTimeRange(outputRange, of: audioAssetSrcTrack, at: kCMTimeZero)
+            
+            guard let exportSession = AVAssetExportSession(asset: composition, presetName: AVAssetExportPresetMediumQuality) else {
+                failer()
+                return
+            }
+            
+            exportSession.canPerformMultiplePassesOverSourceMediaData = true
+            exportSession.outputURL = outputURL
+            exportSession.outputFileType = AVFileType.mp4
+            exportSession.timeRange = CMTimeRangeMake(kCMTimeZero, composition.duration)
+            exportSession.outputFileType = AVFileType.mov as AVFileType
+            
+            exportSession.exportAsynchronously {
+                if exportSession.status.rawValue == 3 {
+                    success(self.formatResult())
+                } else {
+                    failer()
+                }
+            }
+        } catch {
+            failer()
+        }
+        self.dismiss(animated: true, completion: nil)
+    }
+    
+    private func formatResult() -> (String, String) {
+        var _outputVideoPath = outputVideoPath
+        var _outputThumbnailPath = outputThumbnailPath
+        if !requiredScheme {
+            _outputVideoPath = _outputVideoPath!.replacingOccurrences(of: "file://", with: "")
+            _outputThumbnailPath = _outputVideoPath!.replacingOccurrences(of: "file://", with: "")
+        }
+        return (_outputVideoPath!, _outputThumbnailPath!)
     }
     
     func startPlaybackTimeChecker() {
@@ -246,7 +288,11 @@ class VideoTrimmingEditorViewController: UIViewController {
     
     @objc func onPlaybackTimeChecker() {
         
-        guard let startTime = trimmerView.startTime, let endTime = trimmerView.endTime, let player = player else { return }
+        guard let startTime = trimmerView.startTime,
+            let endTime = trimmerView.endTime,
+            let player = player else {
+                return
+        }
         
         let playBackTime = player.currentTime()
         trimmerView.seek(to: playBackTime)
@@ -291,5 +337,32 @@ extension VideoTrimmingEditorViewController: TrimmerViewDelegate {
         let startTime = formatter.string(from: trimmerView.startTime!.seconds)!
         let endTime = formatter.string(from: trimmerView.endTime!.seconds)!
         duration.text = "\(startTime) 〜 \(endTime)"
+    }
+}
+
+enum VideoTrimmingEditorError: Error {
+    case trimmingVideo
+    case createThumbnail
+    case unknown(String)
+}
+
+extension UIImage {
+    func rotatedBy(degree: CGFloat, isCropped: Bool = true) -> UIImage {
+        let radian = -degree * CGFloat.pi / 180
+        var rotatedRect = CGRect(origin: .zero, size: self.size)
+        if !isCropped {
+            rotatedRect = rotatedRect.applying(CGAffineTransform(rotationAngle: radian))
+        }
+        UIGraphicsBeginImageContext(rotatedRect.size)
+        let context = UIGraphicsGetCurrentContext()!
+        context.translateBy(x: rotatedRect.size.width / 2, y: rotatedRect.size.height / 2)
+        context.scaleBy(x: 1.0, y: -1.0)
+        
+        context.rotate(by: radian)
+        context.draw(self.cgImage!, in: CGRect(x: -(self.size.width / 2), y: -(self.size.height / 2), width: self.size.width, height: self.size.height))
+        
+        let rotatedImage = UIGraphicsGetImageFromCurrentImageContext()!
+        UIGraphicsEndImageContext()
+        return rotatedImage
     }
 }
