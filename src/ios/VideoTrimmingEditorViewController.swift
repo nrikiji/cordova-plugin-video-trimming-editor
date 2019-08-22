@@ -127,7 +127,7 @@ class VideoTrimmingEditorViewController: UIViewController {
     }
     
     private func loadAsset() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.0) {
             let formatter = DateComponentsFormatter()
             formatter.unitsStyle = .positional
             formatter.allowedUnits = [.minute, .second]
@@ -271,7 +271,7 @@ class VideoTrimmingEditorViewController: UIViewController {
         var _outputThumbnailPath = outputThumbnailPath
         if !requiredScheme {
             _outputVideoPath = _outputVideoPath!.replacingOccurrences(of: "file://", with: "")
-            _outputThumbnailPath = _outputVideoPath!.replacingOccurrences(of: "file://", with: "")
+            _outputThumbnailPath = _outputThumbnailPath!.replacingOccurrences(of: "file://", with: "")
         }
         return (_outputVideoPath!, _outputThumbnailPath!)
     }
@@ -347,6 +347,7 @@ enum VideoTrimmingEditorError: Error {
 }
 
 extension UIImage {
+    
     func rotatedBy(degree: CGFloat, isCropped: Bool = true) -> UIImage {
         let radian = -degree * CGFloat.pi / 180
         var rotatedRect = CGRect(origin: .zero, size: self.size)
@@ -365,4 +366,5 @@ extension UIImage {
         UIGraphicsEndImageContext()
         return rotatedImage
     }
+    
 }
