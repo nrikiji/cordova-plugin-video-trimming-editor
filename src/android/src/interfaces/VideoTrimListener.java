@@ -8,6 +8,6 @@ package plugin.videotrimmingeditor.interfaces;
  */
 public interface VideoTrimListener {
     void onStartTrim();
-    void onFinishTrim(String url);
+    void onFinishTrim(String url, int startMs);
     void onCancel();
 }

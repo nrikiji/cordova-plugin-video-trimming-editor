@@ -55,12 +55,16 @@ public class VideoTrimmingEditor extends CordovaPlugin {
             if (resultCode == this.cordova.getActivity().RESULT_OK) {
                 try {
                     String videoPath = data.getStringExtra(VideoTrimmerActivity.VIDEO_OUTPUT_KEY);
+                    String thumbnailPath = data.getStringExtra(VideoTrimmingEditorActivity.THUMBNAIL_OUTPUT_KEY);
                     JSONObject json = new JSONObject();
                     json.put("output_path", videoPath);
+                    json.put("thumbnail_path", thumbnailPath);
                     callbackContext.success(json);
                 } catch (JSONException e) {
                     callbackContext.error(-1);
                 }
+            } else {
+                callbackContext.error(-1);
             }
         }
 

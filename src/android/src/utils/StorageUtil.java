@@ -6,7 +6,7 @@ import android.os.Environment;
 import android.text.TextUtils;
 import android.util.Log;
 
-import #{APPLICATION_ID}.BuildConfig;
+import io.cordova.hellocordova.BuildConfig;
 
 import java.io.File;
 import java.io.IOException;

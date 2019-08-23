@@ -11,7 +11,7 @@ import android.util.Log;
 
 import java.io.File;
 
-import #{APPLICATION_ID}.databinding.ActivityVideoTrimBinding;
+import io.cordova.hellocordova.databinding.ActivityVideoTrimBinding;
 import plugin.videotrimmingeditor.features.common.ui.BaseActivity;
 import plugin.videotrimmingeditor.features.compress.VideoCompressor;
 import plugin.videotrimmingeditor.interfaces.VideoCompressListener;
@@ -30,6 +30,7 @@ public class VideoTrimmerActivity extends BaseActivity implements VideoTrimListe
   private static final String TAG = "jason";
   public static final String VIDEO_PATH_KEY = "video-file-path";
   public static final String VIDEO_OUTPUT_KEY = "video-output-path";
+  public static final String VIDEO_START_MS = "video-start-ms";
   private static final String COMPRESSED_VIDEO_FILE_NAME = "compress.mp4";
   public static final int VIDEO_TRIM_REQUEST_CODE = 0x001;
   private ActivityVideoTrimBinding mBinding;
@@ -83,13 +84,14 @@ public class VideoTrimmerActivity extends BaseActivity implements VideoTrimListe
   }
 
   @Override
-  public void onFinishTrim(String in) {
+  public void onFinishTrim(String in, int startMs) {
     if (mProgressDialog.isShowing()) mProgressDialog.dismiss();
     // ToastUtil.longShow(this, getString(R.string.trimmed_done));
     ToastUtil.longShow(this, getString(getResources().getIdentifier("trimmed_done", "string", getPackageName())));
 
     Intent intent = new Intent();
     intent.putExtra(this.VIDEO_OUTPUT_KEY, in);
+    intent.putExtra(this.VIDEO_START_MS, startMs);
     setResult(RESULT_OK, intent);
     finish();
 

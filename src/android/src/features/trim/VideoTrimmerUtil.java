@@ -75,7 +75,7 @@ public class VideoTrimmerUtil {
 
       callback.onStartTrim();
       VideoUtils.startTrim(input, output, (int)startMs, (int) endMs);
-      callback.onFinishTrim(outputFile);
+      callback.onFinishTrim(outputFile, (int)startMs);
 
     } catch (IOException e) {
       callback.onCancel();

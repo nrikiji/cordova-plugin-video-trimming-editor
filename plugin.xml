@@ -102,6 +102,7 @@
     <hook type="after_plugin_install" src="src/scripts/set_application_id.js"/>
 
     <dependency id="cordova-plugin-androidx" version="1.0.2"/>
+    <dependency id="cordova-plugin-androidx-adapter" version="1.1.0"/>
     <framework src="src/android/src/video_trimming_editor.gradle" custom="true" type="gradleReference" />
   </platform>
 
